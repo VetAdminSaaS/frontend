@@ -1,0 +1,449 @@
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar -->
+  <app-sidebar-factus></app-sidebar-factus>
+
+  <div class="flex flex-col w-full">
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+    <section class="py-6 bg-blueGray-50 flex-1 overflow-y-auto">
+      <div class="w-full lg:w-12/14 px-4 mx-auto">
+        <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
+          <div class="rounded-t bg-blueGray-100 mb-0 px-6 py-6">
+            <div class="text-center flex justify-between">
+              <h6 class="text-blueGray-700 text-3xl font-bold">Crear Factura Electrónica</h6>
+              <button
+                class="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button">
+                Ayuda
+              </button>
+            </div>
+            <hr class="mt-6 border-b-1 border-blueGray-300">
+          </div>
+          <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+            <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+
+
+              <!--Información de la factura-->
+              <h6 class="text-blueGray-400 text-xl mt-3 mb-6 font-bold uppercase">Información de Factura</h6>
+              
+              
+              <div class = "flex flex-wrap">
+                
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Rango de numeración <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="numbering_range_id"
+                    [ngClass]="{ 'border-red-500': form.get('numbering_range_id')?.invalid && form.get('numbering_range_id')?.touched }">
+                    
+                    <option value="" disabled selected>Seleccione un rango de numeración</option>
+                    <option *ngFor="let rangoNumerico of rangosNumericos" [value]="rangoNumerico.id">
+                      {{ rangoNumerico.document }} | {{ rangoNumerico.prefix }} ({{ rangoNumerico.from }} - {{ rangoNumerico.to }})
+                    </option>
+                  </select>
+              
+                  <div *ngIf="form.get('numbering_range_id')?.invalid && form.get('numbering_range_id')?.touched"
+                       class="text-red-500 text-xs mt-1">
+                    Por favor, seleccione un rango de numeración.
+                  </div>
+                </div>
+                
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Código de Referencia <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="reference_code"
+                    placeholder="Ingresa el código de referencia"
+                  />
+                </div>
+                <div class="w-full lg:w-12/12 px-4 mb-4">
+                  <label for="message" class="block uppercase mb-2 text-sm font-bold text-gray-900 dark:text-white">
+                    Observación
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="4"
+                    formControlName="observation"  
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Escribe tus observaciones aquí..."
+                  ></textarea>
+                </div>
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Forma de Pago <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="payment_form" (change)="onPaymentFormChange($event)">
+                    <option value="1">Pago de contado</option>
+                    <option value="2">Pago a crédito</option>
+                  </select>
+                  <p class="text-xs text-gray-500 mt-1">
+                    (Opcional) Código de la forma de pago. Si no se selecciona, por defecto la API asigna el código 1 (pago de contado).
+                  </p>
+                </div>
+                
+                <!-- Fecha de vencimiento: solo visible si se selecciona "Pago a crédito" -->
+                <div *ngIf="isCreditPayment" class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Fecha de Vencimiento <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="payment_due_date" required
+                  />
+                  <p class="text-xs text-gray-500 mt-1">
+                    (Requerido solo si la forma de pago es a crédito).
+                  </p>
+                </div>
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Método de Pago <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="payment_method_code">
+                    <option value="10">Efectivo</option>
+                    <option value="42">Consignación</option>
+                    <option value="20">Cheque</option>
+                    <option value="47">Transferencia</option>
+                    <option value="71">Bonos</option>
+                    <option value="72">Vales</option>
+                    <option value="1">Medio de pago no definido</option>
+                    <option value="49">Tarjeta Débito</option>
+                    <option value="48">Tarjeta Crédito</option>
+                    <option value="ZZZ">Otro</option>
+                  </select>
+                  <p class="text-xs text-gray-500 mt-1">
+                    (Opcional) Código del método de pago. Si no se agrega, por defecto la API asigna el código 10 (Efectivo). 
+                  </p>
+                  
+                </div>
+              </div>
+                <hr class="mt-6 border-b-1 border-blueGray-300">
+                <div class="flex items-center">
+                <h6 class="text-blueGray-400 text-xl font-bold uppercase mb-4 mt-4">Período de Facturación</h6>
+                  <p class="text-gray-300 text-lg font-medium px-2">(Opcional)</p>
+              </div>
+              <div class="flex flex-wrap" formGroupName="billing_period">
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-gray-700 text-sm font-bold mb-2">
+                    Fecha de Inicio
+                  </label>
+                  <input
+                    type="date"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="start_date"
+                    required
+                  />
+                  <p class="text-xs text-gray-500 mt-1">
+                    Selecciona la fecha de inicio del período de facturación en formato YYYY-MM-DD.
+                  </p>
+                </div>
+              
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-gray-700 text-sm font-bold mb-2">
+                    Hora de Inicio
+                  </label>
+                  <input 
+                    type="time"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="start_time"
+                    (change)="obtenerHoraCompleta()"
+                    required
+                  />
+                </div>
+                
+                <!-- Campo oculto que almacena HH:mm:ss -->
+                <input type="hidden" [value]="startTimeWithSeconds" name="start_time_seconds" />
+                
+              
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-gray-700 text-sm font-bold mb-2">
+                    Fecha de Fin
+                  </label>
+                  <input
+                    type="date"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="end_date"
+                    
+                    required
+                  />
+                </div>
+              
+                <div class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-gray-700 text-sm font-bold mb-2">
+                    Hora de Fin
+                  </label>
+                  <input
+                    type="time"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="end_time"
+                    (change)="formatTimeFields()"
+                    required
+                  />
+                </div>
+                
+              </div>
+                       
+   <!-- Información del cliente -->
+           <hr class="mt-6 border-b-1 border-blueGray-300">
+              <h6 class="text-blueGray-400 text-xl mt-3 mb-6 font-bold uppercase">Información del Cliente</h6>
+              <div class="flex flex-wrap">
+                <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Tipo de Documento <span class="text-red-500">*</span></label>
+                    <select
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                      formControlName="identification_document_id"(change)="onIdentificationTypeChange($event)"
+                      required
+                      >
+                       
+                        <option value="1">Registro civil</option>
+                        <option value="2">Tarjeta de identidad</option>
+                        <option value="3">Cédula de cuidadanía</option>
+                        <option value="4">Tarjeta de extranjería</option>
+                        <option value="5">Cédula de extranjería</option>
+                        <option value="6">NIT</option>
+                        <option value="7">Pasaporte</option>
+                        <option value="8">Documento de identificación extranjero</option>
+                        <option value="9">PEP</option>
+                        <option value="10">NIT otro país</option>
+                        <option value="11">NUIP</option>
+
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">
+                      Consulte la tabla de IDs para conocer el tipo de identificación correspondiente.
+                    </p>
+                </div>
+                <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Nro De Identificación <span class="text-red-500">*</span></label>
+                  <input 
+                  type="text"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                  formControlName="identification"
+                  required
+                  />
+                </div>
+                <div class="w-full lg:w-6/12 px-4 mb-4" *ngIf="isNITSelected" formGroupName="customer">
+                  <label class="block uppercase text-gray-700 text-sm font-bold mb-2">
+                    Dígito de Verificación
+                  </label>
+                  <input
+                    type="text"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="dv"
+                    pattern="^\d{9,12}$"
+                    title="El NIT debe ser un número de entre 9 y 12 dígitos"
+                    required
+                  />
+                  <p class="text-xs text-gray-500 mt-1">
+                    Requerido solo si el cliente se identifica con NIT.
+                  </p>
+                </div>
+                <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Tipo de Organización <span class="text-red-500">*</span></label>
+                  <select
+                  class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                  
+                  formControlName="legal_organization_id" (change)="onOrganizationTypeChange($event)"
+                  
+                  required
+                  >
+                 
+                  <option value="1">Persona Jurídica</option>
+                  <option value="2">Persona Natural</option>
+                  ></select>
+                </div>
+                <div *ngIf="selectedOrganizationType === '1'" class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Razon Social <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="company"
+                    required
+                  />
+                </div>
+                <div *ngIf="selectedOrganizationType === '1'" class="w-full lg:w-6/12 px-4 mb-4">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Nombre Comercial <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="trade_name"
+                    required
+                  />
+                </div>
+                <div *ngIf="selectedOrganizationType === '2'" class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Nombre del Cliente <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="names"
+                    required
+                  />
+                </div>
+                <div *ngIf="selectedOrganizationType === '2'" class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Dirección <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="address"
+                    required
+                  />
+                </div>
+                <div *ngIf="selectedOrganizationType === '2'" class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Correo Electrónico <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    autocomplete="email" 
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="email"
+                    required
+                  />
+                </div>
+                <div *ngIf="selectedOrganizationType === '2'" class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                   Teléfono <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="phone"
+                    min="0"
+                    required
+                  />
+                </div>
+
+                <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Municipios <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="municipality_id"
+>
+                    <option value="" disabled selected>Seleccione un municipio</option>
+                    <option *ngFor="let municipio of municipios" [value]="municipio.id">
+                      {{ municipio.name }} 
+                    </option>
+                  </select>
+                </div>
+                <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Tributo <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                  class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                  formControlName="tribute_id"
+                  required
+                  >
+                  <option value="" disabled selected>Selecciona un tributo</option>
+                  <option value="18">IVA</option>
+                  <option value="21">No aplica</option>
+                    
+                  </select>
+                </div>
+                </div>
+                <hr class="mt-6 border-b-1 border-blueGray-300">
+                <h6 class="text-blueGray-400 text-xl mt-3 mb-6 font-bold uppercase">Productos</h6>
+                <div class="p-4 bg-white rounded shadow">
+                  <label class="block text-sm font-bold mb-2">Buscar Producto</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="filtro" 
+                    [ngModelOptions]="{standalone: true}" 
+                    (input)="filtrarProductos()" 
+                    placeholder="Buscar por nombre o código de referencia"
+                    class="w-full px-3 py-2 border rounded"
+                  />
+                
+                  <div class="mt-2 border p-2 rounded h-48 overflow-auto">
+                    <ul>
+                      <li *ngFor="let producto of productosFiltrados" 
+                          (click)="seleccionarProducto(producto)" 
+                          class="p-2 flex items-center gap-3 hover:bg-gray-100 cursor-pointer">
+                        
+                        <img [src]="producto.coverPath" alt="Producto" class="w-10 h-10 object-cover rounded">
+                        <span>{{ producto.name }}</span>
+                  
+                      </li>
+                    </ul>
+                  </div>
+                  
+                </div>
+                
+                <!-- Tabla de productos seleccionados -->
+                <div class="mt-4">
+                  <table class="w-full border-collapse border">
+                    <thead>
+                      <tr>
+                        <th class="border px-4 py-2">Código</th>
+                        <th class="border px-4 py-2">Imagen</th>
+                        <th class="border px-4 py-2">Nombre</th>
+                        <th class="border px-4 py-2">Cantidad</th>
+                        <th class="border px-4 py-2">Precio</th>
+                        <th class="border px-4 py-2">Subtotal</th>
+                        <th class="border px-4 py-2">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let productoForm of productosArray?.controls; let i = index" [formGroup]="productoForm">
+
+
+                        <td class="border px-4 py-2">{{ productoForm?.get('code_reference')?.value }}</td>
+                        <td class="border px-4 py-2">
+                          <img [src]="productoForm?.get('coverPath')?.value" alt="Producto" class="w-10 h-10 object-cover rounded">
+                        </td>
+                        <td class="border px-4 py-2">{{ productoForm?.get('name')?.value }}</td>
+                        <td class="border px-4 py-2">
+                          <input type="number" formControlName="quantity" min="1" class="w-16 border rounded px-2">
+                        </td>
+                        <td class="border px-4 py-2">{{ productoForm?.get('price')?.value | currency }}</td>
+                        <td class="border px-4 py-2">{{ calcularSubtotal(productoForm) | currency }}</td>
+                        <td class="border px-4 py-2">
+                          <button (click)="eliminarProducto(i)" class="text-red-500">Eliminar</button>
+                        </td>                        
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <!-- Mostrar total general -->
+                  <div class="mt-4 text-right text-lg font-semibold">
+                    Total: {{ totalFactura | currency }}
+                  </div>
+                  
+                </div>
+                
+              <!-- Botón de acción -->
+              <div class="text-center mt-6">
+                <button
+                class="bg-green-500 text-white active:bg-green-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="submit"
+                [disabled]="!form.valid">
+                Guardar Factura
+              </button>
+              
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="relative w-full overflow-hidden">
+    <!-- Carrusel -->
+    <div class="flex transition-transform duration-500 ease-in-out" 
+         [ngStyle]="{'transform': 'translateX(' + (-currentIndex * 100) + '%)'}">
+      <div *ngFor="let image of images" class="min-w-full">
+        <img [src]="image" class="w-full h-full object-cover rounded-lg" />
+      </div>
+    </div>
+  
+    <!-- Botones de navegación -->
+    <button (click)="prevSlide()" 
+            class="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-100 text-black p-2 rounded-full shadow-lg hover:bg-gray-300 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+  
+    <button (click)="nextSlide()" 
+            class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-100 text-black p-2 rounded-full shadow-lg hover:bg-gray-300 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  
+    <!-- Indicadores -->
+    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+      <span *ngFor="let _ of images; let i = index" 
+            class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer"
+            [ngClass]="{'bg-black': currentIndex === i, 'bg-gray-400': currentIndex !== i}"
+            (click)="goToSlide(i)"></span>
+    </div>
+  </div>
+  

@@ -1,0 +1,126 @@
+<div class="flex h-screen bg-gray-100">
+  <app-sidebar-factus></app-sidebar-factus>
+  <div class="flex-1 p-8 overflow-auto">
+    <div class="max-w-8xl mx-auto">
+      <!-- Header -->
+      <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-800">Perfil de Usuario</h2>
+        <p class="text-gray-600 mt-2">Administra y visualiza la información de los usuarios.</p>
+      </div>
+
+      <!-- Search and Filters -->
+      <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+        <div class="flex flex-col sm:flex-row gap-4">
+          <input
+            type="text"
+            placeholder="Buscar usuario..."
+            class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+          />
+          <select
+            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+          >
+            <option value="">Filtrar por Rol</option>
+            <option value="ADMIN">Adminastrador</option>
+            <option value="CUSTOMER">Customer</option>
+          </select>
+          <button
+            class="p-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+
+      <!-- User Table -->
+      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-purple-600 text-white">
+            <tr>
+              <th class="p-4 text-left">ID</th>
+              <th class="p-4 text-left">Email</th>
+              <th class="p-4 text-left">Rol</th>
+              <th class="p-4 text-left">Tipo de Identificación</th>
+              <th class="p-4 text-left">Identificación</th>
+              <th class="p-4 text-left">Dirección</th>
+              <th class="p-4 text-left">Municipio</th>
+              <th class="p-4 text-left">Tributo</th>
+              <th class="p-4 text-left">Telefono</th>
+              <th class="p-4 text-left">Tipo de Organización</th>
+              <th class="p-4 text-left">names</th>
+              <th class="p-4 text-left">Compañia</th>
+              <th class="p-4 text-left">Nombre Comercial</th>
+              <th class="p-4 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let usuario of user" class="hover:bg-gray-50 transition">
+              <td class="p-4 text-gray-700">{{ usuario.id }}</td>
+              <td class="p-4 text-gray-700">{{ usuario.email }}</td>
+              <td class="p-4 text-gray-700">{{ usuario.role }}</td>
+              <td class="p-4 text-gray-700">{{ getIdentificationTypeName(usuario.identificationDocumentId)}}</td>
+              <td class="p-4 text-gray-700">{{ usuario.identification }}</td>
+              <td class="p-4 text-gray-700">{{ usuario.address }}</td>
+              <td class="p-4 text-gray-700">{{ getMunicipioNombre(usuario.municipalityId) }}</td>
+              <td class="p-4 text-gray-700">{{ getTributo(usuario.tributeId) }}</td>
+              <td class="p-4 text-gray-700">{{ usuario.phone }}</td>
+              <td class="p-4 text-gray-700">{{ getLegalOrganization(usuario.legalOrganizationId) }}</td>
+              <td class="p-4 text-gray-700">{{ usuario.names || 'No registrado' }}</td>
+              <td class="p-4 text-gray-700">{{ usuario.company || 'No registrado'}}</td>
+              <td class="p-4 text-gray-700">{{ usuario.tradeName || 'No registrado' }}</td>
+              <td class="p-4">
+                <div class="flex gap-2">
+                  <button
+                    class="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- No Users Message -->
+        <p *ngIf="user.length === 0" class="p-6 text-gray-600 text-center">
+          No hay usuarios disponibles.
+        </p>
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-6 flex justify-center">
+        <nav class="inline-flex rounded-md shadow-sm">
+          <button
+            class="p-3 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-50 transition"
+          >
+            Anterior
+          </button>
+          <button
+            class="p-3 bg-white border border-gray-300 hover:bg-gray-50 transition"
+          >
+            1
+          </button>
+          <button
+            class="p-3 bg-white border border-gray-300 hover:bg-gray-50 transition"
+          >
+            2
+          </button>
+          <button
+            class="p-3 bg-white border border-gray-300 hover:bg-gray-50 transition"
+          >
+            3
+          </button>
+          <button
+            class="p-3 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-50 transition"
+          >
+            Siguiente
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,145 @@
+<div class="flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+   <app-sidebar-factus></app-sidebar-factus>
+
+    <!-- Main content -->
+    <div class="flex flex-col w-full">
+        <!-- Navbar -->
+        <app-navbar></app-navbar>
+
+      <!-- Facturas Table -->
+<div class="w-full h-full p-8 bg-gray-50 flex-1 overflow-y-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center font-sans">Facturas</h1>
+    <div class="mb-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <input type="text" [(ngModel)]="filtros.identification" (input)="aplicarFiltro()" class="w-full px-4 py-2 border rounded-lg" placeholder="Identificación">
+        <input type="text" [(ngModel)]="filtros.names" (input)="aplicarFiltro()" class="w-full px-4 py-2 border rounded-lg" placeholder="Nombre">
+        <input type="text" [(ngModel)]="filtros.number" (input)="aplicarFiltro()" class="w-full px-4 py-2 border rounded-lg" placeholder="Número de factura">
+        <input type="text" [(ngModel)]="filtros.reference_code" (input)="aplicarFiltro()" class="w-full px-4 py-2 border rounded-lg" placeholder="Código de referencia">
+        <select [(ngModel)]="filtros.status" (change)="aplicarFiltro()" class="w-full px-4 py-2 border rounded-lg">
+          <option value="" disabled selected>Seleccione un estado</option>
+          <option value="1">Aprobado</option>
+          <option value="0">Rechazado</option>
+        </select>
+      </div>
+      
+
+    <div class="overflow-hidden rounded-lg shadow-sm">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Identificación</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Nombres</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Correo Electrónico</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Número</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Total</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Fecha</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Código</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Estado</th>
+                    <th class="px-6 py-4 text-left text-base font-medium text-gray-600 uppercase tracking-wider">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let factura of facturas" class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.id }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.identification }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.names }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.email }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.number }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.total }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.created_at }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">{{ factura.reference_code }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-700">
+                        <div class="flex items-center">
+                            <span *ngIf="factura.status === 1" class="w-5 h-5  bg-green-500 rounded-full"></span>
+                            <span *ngIf="factura.status === 0" class="w-5 h-5 bg-red-500 rounded-full"></span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-base text-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <!-- Botón para ver la factura -->
+                            <button
+                                class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out"
+                                (click)="verFactura(factura.number)"
+                                [disabled]="isLoading"
+                            >
+                                <i class="fas fa-eye"></i>
+                      
+                            </button>
+                            <!-- Botón para descargar PDF -->
+                            <button
+                                class="text-red-500 hover:text-red-700 transition duration-150 ease-in-out"
+                                (click)="descargarFactura(factura.number)"
+                            >
+                                <i class="fas fa-file-pdf"></i>
+                            </button>
+                            <!-- Botón para eliminar la factura -->
+                            <button
+                                class="text-gray-500 hover:text-gray-700 transition duration-150 ease-in-out"
+                                (click)="eliminarFactura(factura.reference_code)"
+                            >
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button
+                            class="text-blue-600 hover:text-green-400 transtion duration-150 ease-in-out py-2 px-4 rounded border-l "
+                            (click)="verDian(factura.number)"> Ver Dian
+
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="flex justify-between items-center mt-8 bg-white p-6 rounded-lg shadow-sm">
+        <span class="text-gray-700 text-lg">Mostrando {{ startItem }}-{{ endItem }} de {{ totalResults }}</span>
+        <div class="flex space-x-4">
+            <!-- Botón Anterior -->
+            <button 
+                (click)="previousPage()" 
+                [disabled]="currentPage === 1" 
+                class="px-6 py-3 text-white bg-gray-800 rounded-lg hover:bg-gray-700 disabled:bg-gray-300 transition duration-200">
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+
+            <!-- Botones de Páginas -->
+            <div class="flex items-center space-x-2">
+                <button 
+                    *ngIf="currentPage > 2" 
+                    (click)="goToPage(1)" 
+                    class="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-800 hover:text-white transition duration-200">
+                    1
+                </button>
+                <span *ngIf="currentPage > 3" class="text-gray-700">...</span>
+                <button 
+                    *ngFor="let page of getPageRange()" 
+                    (click)="goToPage(page)" 
+                    [class.bg-gray-800]="page === currentPage" 
+                    [class.text-white]="page === currentPage" 
+                    class="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-800 hover:text-white transition duration-200">
+                    {{ page }}
+                </button>
+                <span *ngIf="currentPage < totalPages - 2" class="text-gray-700">...</span>
+                <button 
+                    *ngIf="totalPages > 1" 
+                    (click)="goToPage(totalPages)" 
+                    class="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-800 hover:text-white transition duration-200">
+                    {{ totalPages }}
+                </button>
+            </div>
+
+            <!-- Botón Siguiente -->
+            <button 
+                (click)="nextPage()" 
+                [disabled]="currentPage === totalPages" 
+                class="px-6 py-3 text-white bg-gray-800 rounded-lg hover:bg-gray-700 disabled:bg-gray-300 transition duration-200">
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+        
+    </div>
+</div>

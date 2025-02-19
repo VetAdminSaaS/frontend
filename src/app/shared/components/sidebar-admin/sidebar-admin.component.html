@@ -1,0 +1,90 @@
+<div class="w-80 bg-white text-black shadow-md border-r border-gray-200 h-full flex flex-col p-6 space-y-6">
+  <!-- Logo -->
+  <div class="flex flex-col items-center space-y-3 mb-8">
+    <!-- Nombre del Usuario -->
+    <h2 class="text-xl font-semibold text-gray-800">¡Hola {{ customerName }}!</h2>
+  
+    <!-- Avatar con Iniciales (Más Grande) -->
+    <div class="w-24 h-24 flex items-center justify-center rounded-full bg-purple-500 text-white text-3xl font-bold border-4 border-gray-300">
+      {{ initials }}
+    </div>
+  </div>
+  
+  <!-- Separador -->
+  <div class="border mt-1"></div>
+  
+  <!-- Menu -->
+  <ul class="space-y-4 flex-1">
+    <!-- Inicio -->
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">home</span>
+        <span>Inicio</span>
+      </a>
+    </li>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/customer/mi-cuenta" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">person</span>
+        <span>Mi Cuenta</span>
+      </a>
+   </li>
+   
+
+  
+    
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/customer/purchases/list" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">shopping_cart</span>
+        <span>Compras</span>
+      </a>
+    </li>
+    
+
+    <!-- Reportes -->
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">assessment</span>
+        <span>Reportes</span>
+      </a>
+    </li>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/customer/mis-facturas" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">receipt_long</span>
+        <span>Mis Facturas</span>
+      </a>
+   </li>
+   <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+    <a routerLink="/mis-direcciones" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+      <span class="material-icons">location_on</span>
+      <span>Mis Direcciones</span>
+    </a>
+ </li>
+ 
+   
+    <div class="border"></div>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/settings" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">settings</span>
+        <span>Configuración</span>
+      </a>
+   </li>
+   <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+    <a routerLink="/help" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+      <span class="material-icons">help_outline</span>
+      <span>Ayuda</span>
+    </a>
+ </li>
+ 
+   
+
+  
+  </ul>
+
+  <!-- Footer: Cerrar sesión (fijo en la parte inferior) -->
+  <div class="border-t pt-4">
+    <a href="#" (click)="logout()" class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out text-gray-600 hover:text-red-600">
+      <span class="material-icons">logout</span>
+      <span>Cerrar Sesión</span>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,126 @@
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a href="#" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors duration-200">
+          Veterinaria Amigos
+        </a>
+      </div>
+
+      <!-- Menú de Navegación (oculto en móviles) -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#" class="text-gray-800 hover:text-blue-600 px-3 py-2 transition-colors duration-200">Inicio</a>
+        <a href="#" class="text-gray-800 hover:text-blue-600 px-3 py-2 transition-colors duration-200">Productos</a>
+        <a href="#" class="text-gray-800 hover:text-blue-600 px-3 py-2 transition-colors duration-200">Contacto</a>
+      </div>
+
+      <!-- Carrito e Iniciar Sesión -->
+      <div class="flex items-center space-x-6">
+        <!-- Carrito de Compras -->
+        <a
+          routerLink="/store/cart"
+          class="relative flex items-center p-2 text-gray-800 hover:text-blue-600 transition-all duration-300 ease-in-out transform hover:scale-105"
+        >
+          <!-- Ícono del carrito con animación de rotación -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 transition-transform duration-300 ease-in-out hover:rotate-[-10deg]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+
+          <!-- Indicador de cantidad de productos en el carrito con animación de rebote -->
+          <span
+            *ngIf="cartItemCount > 1"
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce"
+          >
+            {{ cartItemCount }}
+          </span>
+        </a>
+
+        <!-- Iniciar Sesión o Menú de Usuario -->
+        <div class="relative">
+          <!-- Botón de Usuario (Si está autenticado) -->
+          <button
+            *ngIf="isCustomer || isAdmin"
+            (click)="toggleDropdown()"
+            class="flex items-center text-gray-800 hover:text-blue-600 p-2 transition-colors duration-200"
+            aria-label="Abrir menú de usuario"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <span *ngIf="customerName" class="ml-2 text-sm sm:text-base font-medium text-left">
+              ¡Hola, {{ customerName }}!
+            </span>
+          </button>
+
+          <!-- Botón "Iniciar Sesión" (Si NO está autenticado) -->
+          <a
+            *ngIf="!isCustomer && !isAdmin"
+            routerLink="/login"
+            class="flex items-center text-gray-800 hover:text-blue-600 p-2 transition-colors duration-200"
+            aria-label="Ir a la página de inicio de sesión"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <span class="ml-2 text-sm sm:text-base font-medium">Iniciar Sesión</span>
+          </a>
+
+          <!-- Dropdown Menu -->
+          <div
+            *ngIf="isDropdownOpen && isCustomer"
+            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+          >
+            <a
+              routerLink="/customer/mi-cuenta"
+              class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
+            >
+              Mi Cuenta
+            </a>
+            <button
+              (click)="logout()"
+              class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

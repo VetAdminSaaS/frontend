@@ -1,0 +1,36 @@
+<div class="flex h-screen bg-gray-100">
+    <app-sidebar-admin></app-sidebar-admin>
+    <div class="w-full bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold mb-4">Listado de Compras</h2>
+      <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="py-2 px-4 border">ID</th>
+            <th class="py-2 px-4 border">Total</th>
+            <th class="py-2 px-4 border">Fecha</th>
+            <th class="py-2 px-4 border">Estado de Pago</th>
+            <th class="py-2 px-4 border">Cliente</th>
+            <th class="py-2 px-4 border">Número</th>
+            <th class="py-2 px-4 border">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let purchase of purchases" class="hover:bg-gray-100">
+            <td class="py-2 px-4 border">{{ purchase.id }}</td>
+            <td class="py-2 px-4 border">{{ purchase.total | currency }}</td>
+            <td class="py-2 px-4 border">{{ purchase.createdAt | date:'short' }}</td>
+            <td class="py-2 px-4 border">{{ purchase.paymentStatus }}</td>
+            <td class="py-2 px-4 border">{{ purchase.names }}</td>
+            <td class="py-2 px-4 border">{{ purchase.number }}</td>
+            <td class="py-2 px-4 border text-center">
+                <button  class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" (click)="verFactura(purchase.number.toString())">
+                    Ver Factura
+                  </button>
+                  
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

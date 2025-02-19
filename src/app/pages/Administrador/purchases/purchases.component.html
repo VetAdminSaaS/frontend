@@ -1,0 +1,61 @@
+<div class="flex h-screen bg-gray-100">
+  <app-sidebar-factus></app-sidebar-factus>
+  <div class="flex-1 overflow-y-auto p-8">
+    <div class="max-w-8xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="p-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800">Listado de Compras</h2>
+        <p class="text-sm text-gray-500 mt-1">Gestiona y revisa las compras realizadas por los clientes.</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado de Pago</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let purchase of purchases" class="hover:bg-gray-50 transition-colors">
+              <td class="py-4 px-6 text-sm text-gray-900">{{ purchase.id }}</td>
+              <td class="py-4 px-6 text-sm text-gray-900">{{ purchase.total | currency }}</td>
+              <td class="py-4 px-6 text-sm text-gray-900">{{ purchase.createdAt | date:'short' }}</td>
+              <td class="py-4 px-6 text-sm text-gray-900">
+                <span [ngClass]="{
+                  'bg-green-100 text-green-800': purchase.paymentStatus === 'PAID',
+                  'bg-red-100 text-red-800': purchase.paymentStatus === 'PENDING',
+                  'bg-yellow-100 text-yellow-800': purchase.paymentStatus === 'FAILED'
+                }" class="px-3 py-1 rounded-full text-xs font-medium">
+                  {{ purchase.paymentStatus }}
+                </span>
+              </td>
+              <td class="py-4 px-6 text-sm text-gray-900">{{ purchase.names }}</td>
+              <td class="py-4 px-6 text-sm text-gray-900">{{ purchase.number }}</td>
+              <td class="py-4 px-6 text-sm">
+                <div class="flex items-center space-x-4">
+                  <button class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-95 transition-all duration-300"
+                    (click)="verFactura(purchase.number.toString())">
+                    <span class="mr-2">📄</span> Ver Factura
+                  </button>
+                  <div class="h-8 w-px bg-gray-300"></div>
+                  <button class="flex items-center justify-center bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 active:scale-95 transition-all duration-300"
+                    (click)="verDian(purchase.number.toString())">
+                    <span class="mr-2">🔍</span> Ver Dian
+                  </button>
+                  
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="p-6 border-t border-gray-200">
+        <p class="text-sm text-gray-500">Mostrando {{ purchases.length }} resultados</p>
+      </div>
+    </div>
+  </div>
+</div>

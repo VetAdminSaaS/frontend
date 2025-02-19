@@ -1,0 +1,122 @@
+<div class="flex h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-sidebar-factus></app-sidebar-factus>
+
+  <div class="flex-1 flex flex-col">
+    <app-navbar></app-navbar>
+
+    <div class="flex-1 p-8">
+      <!-- Bienvenida -->
+      <div *ngIf="isAdmin" class="bg-white text-gray-800 p-6 rounded-xl shadow-sm mb-8 flex items-center gap-6">
+        <div class="flex-shrink-0">
+          <img src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+            class="w-16 h-16 rounded-full border border-gray-300 shadow-sm" alt="User Avatar">
+        </div>
+        <div>
+          <h2 
+          *ngIf="isAdmin"
+          class="text-xl font-bold text-gray-700">¡Bienvenido de nuevo, {{ customerName }}! 👋</h2>
+          <p class="text-gray-500 text-sm">Administra tu tienda con información clave al instante.</p>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-gray-500">📦</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Productos</h4>
+            <p class="text-2xl font-bold text-gray-700 mt-1">{{totalProduct}}</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-gray-500">🧾</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Facturas</h4>
+            <p class="text-2xl font-bold text-gray-700 mt-1">{{totalFacturas}}</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-green-500">💰</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Total Compras</h4>
+            <p class="text-2xl font-bold text-green-600 mt-1">{{totalPaid | currency}}
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-blue-500">📈</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Ventas del Mes</h4>
+            <p class="text-2xl font-bold text-blue-600 mt-1">
+              {{ ventasMes  | number }}
+              <span 
+                class="text-sm font-semibold" 
+                [ngClass]="esCrecimiento ? 'text-green-500' : 'text-red-500'"
+              >
+                {{ esCrecimiento ? '↑' : '↓' }} {{ porcentaje | number: '1.0-2' }}%
+              </span>
+            </p>
+          </div>
+        </div>
+        
+        
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-purple-500">👥</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Clientes Registrados</h4>
+            <p class="text-2xl font-bold text-purple-600 mt-1">{{totalUsuarios}}</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-gray-500">🔥</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Producto Más Vendido</h4>
+            <p class="text-md font-bold text-gray-700 mt-1">Laptop HP</p>
+            <p class="text-sm text-gray-500">45 unidades</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-indigo-500">🕒</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Última Venta</h4>
+            <p class="text-md font-bold text-gray-700 mt-1">Pedido #1023</p>
+            <p class="text-sm text-gray-500">Hace 2 horas - $320.00</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-teal-500">🧾</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Ticket Promedio</h4>
+            <p class="text-2xl font-bold text-teal-600 mt-1">$850.00</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-orange-500">⚠️</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Productos con Bajo Stock</h4>
+            <p class="text-2xl font-bold text-orange-500 mt-1">5</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+          <span class="text-4xl text-pink-500">🆕</span>
+          <div>
+            <h4 class="text-md font-semibold text-gray-700">Clientes Nuevos</h4>
+            <p class="text-2xl font-bold text-pink-600 mt-1">18</p>
+          </div>
+        </div> 
+      </div>
+
+      <!-- Línea divisoria -->
+      <div class="border mt-10"></div>
+    </div>
+  </div>
+</div>

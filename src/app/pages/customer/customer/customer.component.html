@@ -1,0 +1,65 @@
+<div class="flex h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-white">
+    <!-- Barra lateral -->
+    <app-sidebar-admin></app-sidebar-admin>
+  
+    <!-- Contenedor principal -->
+    <div class="flex-1 flex flex-col items-center px-8 py-12">
+      <div class="bg-white shadow-xl rounded-2xl w-10/12  border border-gray-200 p-10">
+        <!-- Encabezado -->
+        <div class="text-start mb-8">
+          <h2 class="text-4xl font-extrabold text-gray-800">
+            <span class="text-purple-600">Perfil del Usuario</span>
+          </h2>
+          <p class="text-gray-500 mt-2 text-lg">Información detallada de tu cuenta</p>
+        </div>
+        <div class="border mb-6"></div>
+  
+        <!-- Contenedor de información -->
+        <div class="grid grid-cols-3 gap-y-8 gap-x-12">
+          <!-- Bloques de información -->
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-badge-check text-purple-500 text-2xl"></i>
+            <p class="text-gray-700"><strong>Nombre:</strong> {{ usuarioForm.get('names')?.value }}</p>
+          </div>
+          
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-badge-check text-purple-500 text-2xl"></i>
+            <p class="text-gray-700">
+                <strong>Tipo de Identificación:</strong> 
+                {{ getIdentificationTypeName(usuarioForm.get('identificationDocumentId')?.value) }}
+            </p>
+        </div>
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+          <i class="lucide lucide-user text-gray-600 text-2xl"></i>
+          <p class="text-gray-700"><strong>Identificación:</strong> {{ usuarioForm.get('identification')?.value || 'No registrado'}}</p>
+        </div>
+        
+
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-map-pin text-blue-500 text-2xl"></i>
+            <p class="text-gray-700"><strong>Dirección:</strong> {{ usuarioForm.get('address')?.value }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-mail text-red-500 text-2xl"></i>
+            <p class="text-gray-700"><strong>Email:</strong> {{ usuarioForm.get('email')?.value }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-phone text-green-500 text-2xl"></i>
+            <p class="text-gray-700"><strong>Teléfono:</strong> {{ usuarioForm.get('phone')?.value }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-building text-yellow-500 text-2xl"></i>
+            <p class="text-gray-700"><strong>Razón Social:</strong> {{ usuarioForm.get('company')?.value || 'No registrado' }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
+            <i class="lucide lucide-user text-gray-600 text-2xl"></i>
+            <p class="text-gray-700"><strong>Nombre Comercial:</strong> {{ usuarioForm.get('tradeName')?.value || 'No registrado'}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

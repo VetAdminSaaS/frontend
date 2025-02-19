@@ -1,0 +1,97 @@
+<div class="w-full md:w-64 lg:w-80 bg-white text-black shadow-md border-r border-gray-200 h-screen flex flex-col p-6 space-y-6">
+  <!-- Logo -->
+  <div class="flex items-center space-x-3 mb-8">
+      <img src="https://www.exact.com.pe/assets/uploads/noticias/8-beneficios-del-sistema-de-facturacion-online.jpg" 
+           alt="Logo" class="w-10 h-10 rounded-full border-2 border-gray-300">
+      <h2 class="text-xl font-semibold text-gray-800">E-FacturaPro</h2>
+  </div>
+
+  <!-- Menu -->
+  <ul class="space-y-2 flex-1 overflow-y-auto">
+      <!-- Inicio -->
+      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+          <a routerLink="/administrador/dashboard" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+              <span class="material-icons">home</span>
+              <span>Dashboard</span>
+          </a>
+      </li>
+
+      <!-- Usuarios -->
+      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+          <a routerLink="/administrador/usuarios/list" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+              <span class="material-icons">people</span>
+              <span>Usuarios</span>
+          </a>
+      </li>
+
+      <!-- Compras -->
+      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+          <a routerLink="/administrador/purchases/list" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+              <span class="material-icons">shopping_cart</span>
+              <span>Compras</span>
+          </a>
+      </li>
+
+      <!-- Reportes -->
+      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+          <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+              <span class="material-icons">assessment</span>
+              <span>Reportes</span>
+          </a>
+      </li>
+
+      <!-- Productos (Dropdown) -->
+      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out group">
+          <div class="flex items-center justify-between cursor-pointer">
+              <div class="flex items-center space-x-3">
+                  <span class="material-icons">inventory_2</span>
+                  <span>Productos</span>
+              </div>
+              <span class="material-icons transform transition-transform duration-200 group-hover:rotate-90">expand_more</span>
+          </div>
+          <!-- Dropdown Content -->
+          <ul class="hidden group-hover:block ml-6 mt-2 space-y-2">
+              <li class="hover:bg-gray-100 p-2 rounded-lg">
+                  <a href="#" [routerLink]="['/administrador/products/create']" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+                      <span class="material-icons text-sm">add_circle</span>
+                      <span>Crear Producto</span>
+                  </a>
+              </li>
+          </ul>
+      </li>
+
+      <!-- Facturas (Dropdown) -->
+      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out group">
+          <div class="flex items-center justify-between cursor-pointer">
+              <div class="flex items-center space-x-3">
+                  <span class="material-icons">receipt_long</span>
+                  <span>Facturas</span>
+              </div>
+              <span class="material-icons transform transition-transform duration-200 group-hover:rotate-90">expand_more</span>
+          </div>
+          <!-- Submenú -->
+          <ul class="hidden group-hover:block ml-6 mt-2 space-y-2">
+              <li class="hover:bg-gray-100 p-2 rounded-lg">
+                  <a href="#" [routerLink]="['/administrador/invoices/create']" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+                      <span class="material-icons text-sm">add_circle</span>
+                      <span>Crear Factura</span>
+                  </a>
+              </li>
+              <li class="hover:bg-gray-100 p-2 rounded-lg">
+                  <a href="#" [routerLink]="['/administrador/invoices/view']" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+                      <span class="material-icons text-sm">list_alt</span>
+                      <span>Ver Facturas</span>
+                  </a>
+              </li>
+          </ul>
+      </li>
+  </ul>
+
+  <!-- Footer: Cerrar sesión (fijo en la parte inferior) -->
+  <div class="border-t pt-4">
+      <a href="#" (click)="logout()" class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out text-gray-600 hover:text-red-600">
+          <span class="material-icons">logout</span>
+          <span>Cerrar Sesión</span>
+      </a>
+  </div>
+</div>
