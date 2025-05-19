@@ -4,7 +4,7 @@
  
 
   <!-- Contenedor unificado con fondo blanco, bordes redondeados y sombra -->
-  <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row gap-4 ">
+  <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row gap-4 "style="font-family: 'Barlow', sans-serif;">
     
 
     <!-- Sección Izquierda: Formulario de Cliente -->
@@ -13,145 +13,109 @@
     </div>
 
     <!-- Sección Derecha: Carrito de Compras -->
-    <div class="w-full md:w-4/12 md:pl-4">
-      <!-- Si el carrito tiene items -->
-      <div *ngIf="cartItems.length > 0" class="space-y-4">
+    <div class="w-full md:w-4/12">
+      <div class="sticky top-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+         
+          Resumen del pedido
+        </h2>
 
-        <!-- Listado de productos -->
-        <div
-          *ngFor="let item of cartItems; trackBy: trackByProductoId"
-          class="bg-gray-50 p-4 rounded-lg flex items-center gap-4 shadow hover:shadow-md transition-shadow"
-        >
-          <!-- Imagen del producto con fallback -->
-          <img
-            [src]="item.coverPath"
-            [alt]="item.name"
-            class="w-24 h-24 object-cover rounded-lg"
-          />
-
-          <div class="flex-1 p-4 bg-gray-50 border-l ">
-            <!-- Nombre del producto -->
-            <span class="block text-xl font-bold text-gray-800 mb-2">{{ item.name }}</span>
-          <div class="border mt-1 mb-3"></div>
-            <!-- Código de referencia -->
-            <span class="block text-sm text-gray-600 mb-4">
-              <span class="font-medium">Código:</span> {{ item.code_reference }}
-            </span>
-          
-            <!-- Detalles del producto -->
-            <div class="space-y-3">
-              <!-- Cantidad -->
-              <div class="flex justify-between">
-                <span class="text-sm text-gray-600">Cantidad</span>
-                <span class="text-sm font-medium text-gray-800">{{ item.quantity }}</span>
+        <!-- Lista de productos -->
+        <div *ngIf="cartItems.length > 0" class="space-y-6">
+          <div *ngFor="let item of cartItems" 
+               class="group bg-white border border-gray-100 rounded-xl p-4 ">
+            <div class="flex gap-4">
+              <div class="relative">
+                <img [src]="item.coverPath" [alt]="item.name" 
+                     class="w-20 h-20 object-cover rounded-lg border-2 border-gray-50"/>
+                <span *ngIf="item.discount_rate > 0" 
+                      class="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 text-xs rounded-full">
+                  -{{ item.discount_rate }}%
+                </span>
               </div>
-          
-              <!-- Precio -->
-              <div class="flex justify-between">
-                <span class="text-sm text-gray-600">Precio unitario</span>
-                <span class="text-sm font-medium text-gray-800">{{ item.price | currency }}</span>
+              
+              <div class="flex-1">
+                <h3 class="font-bold text-gray-900 truncate">{{ item.name }}</h3>
+                <p class="text-sm text-gray-500 mb-1">{{ item.code_reference }}</p>
+                
+                <div class="flex flex-wrap gap-2 text-sm">
+                  <div class="bg-gray-50 px-2 py-1 rounded-md">
+                    <span class="text-gray-600">Cantidad:</span>
+                    <span class="font-medium text-gray-900">{{ item.quantity }}</span>
+                  </div>
+                  <div class="bg-gray-50 px-2 py-1 rounded-md">
+                    <span class="text-gray-600">Precio:</span>
+                    <span class="font-medium text-gray-900">{{ item.price | currency }}</span>
+                  </div>
+                </div>
               </div>
-          
-              <!-- Descuento -->
-              <div class="flex justify-between">
-                <span class="text-sm text-gray-600">Descuento</span>
-                <span class="text-sm font-medium text-red-500">{{ item.discount_rate }}%</span>
-              </div>
-          
-              <!-- Unidad de Medida (condicional) -->
-              <div class="flex justify-between" *ngIf="unidadMedidas.length > 0">
-                <span class="text-sm text-gray-600">Unidad de Medida</span>
-                <span class="text-sm font-medium text-gray-800">{{ getNombreUnidadMedida(item.unit_measure_id) }}</span>
-              </div>
+              
+              <button (click)="removeItem(item.productoId)" 
+                      class="self-start text-gray-400 hover:text-red-500 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
             </div>
           </div>
-
-          <!-- Botón para eliminar el producto -->
-          <button
-          (click)="removeItem(item.productoId)"
-          class="flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200"
-        >
-          <span class="material-icons text-3xl">delete</span>
-        </button>
         </div>
 
-        <!-- Sección de Total -->
-        <div class="p-6 bg-white rounded-lg shadow-md">
+        <!-- Totales -->
+        <div class="bg-gray-50 rounded-xl p-6 mt-8 border border-gray-100">
           <div class="space-y-4">
-            <!-- Subtotal -->
-            <div class="flex justify-between">
-              <span class="text-lg text-gray-600">Subtotal</span>
-              <span class="text-lg font-semibold text-gray-800">{{ total | currency }}</span>
+            <div class="flex justify-between text-gray-600">
+              <span>Subtotal:</span>
+              <span class="font-medium">{{ total | currency }}</span>
             </div>
-        
-            <!-- Descuento -->
-            <div class="flex justify-between">
-              <span class="text-lg text-gray-600">Descuento</span>
-              <span class="text-lg font-semibold text-red-500">-{{ discount_rate | currency }}</span>
+            <div class="flex justify-between text-red-600">
+              <span>Descuento:</span>
+              <span class="font-medium">-{{ discount_rate | currency }}</span>
             </div>
-        
-            <!-- Total con Descuento -->
-            <div class="flex justify-between pt-4 border-t border-gray-200">
-              <span class="text-xl font-semibold text-gray-800">Total</span>
-              <span class="text-xl font-semibold text-gray-800">{{ (total - discount_rate) | currency }}</span>
+            <div class="pt-4 border-t border-gray-200">
+              <div class="flex justify-between font-bold text-lg text-gray-900">
+                <span>Total:</span>
+                <span>{{ (total - discount_rate) | currency }}</span>
+              </div>
             </div>
           </div>
-        </div>
-        
-        
 
-        <!-- Acciones del carrito -->
-        <div class="flex flex-wrap justify-end gap-4 mt-4">
-          <!-- Vaciar carrito -->
-          <button
-            (click)="clearCart()"
-            class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400 focus:outline-none"
-          >
-            Vaciar Carrito
+          <!-- Acciones -->
+          <div class="mt-8 space-y-4">
+            <button (click)="clearCart()"
+                    class="w-full py-3.5 px-6 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-xl 
+                           hover:border-red-500 hover:text-red-600 transition-all flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              Vaciar Carrito
+            </button>
+            
+            <button (click)="proceedToCheckout()"
+                    [disabled]="loading || !(isCustomerConfirmed$ | async) || cartItems.length === 0"
+                    class="w-full py-3.5 px-6 bg-gradient-to-br from-blue-600 to-blue-500 text-white font-semibold rounded-xl 
+                           hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed 
+                           flex items-center justify-center gap-2">
+              <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_150x38.png" 
+                   alt="PayPal" class="h-6">
+            </button>
+          </div>
+        </div>
+
+        <!-- Carrito vacío -->
+        <div *ngIf="cartItems.length === 0" class="text-center py-12">
+          <div class="text-gray-200 mb-6">
+            <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <p class="text-gray-600 mb-6 text-lg">Tu carrito está vacío</p>
+          <button (click)="goBackToStore()"
+                  class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold">
+            Explorar productos
           </button>
-
-          <!-- Pago con PayPal -->
-         <!-- Botón para proceder al pago -->
-<!-- Botón de Checkout con PayPal -->
-<button
-  class="bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-600 active:scale-95 focus:outline-none
-         disabled:bg-gray-500 disabled:text-gray-300 disabled:cursor-not-allowed"
-  [disabled]="loading || !(isCustomerConfirmed$ | async) || cartItems.length === 0"
-  (click)="proceedToCheckout()"
->
-  <img
-    src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png"
-    alt="PayPal Checkout"
-    class="h-6 mx-auto"
-  />
-</button>
-
-
-
-
-<!-- Mostrar overlay de carga -->
-<div *ngIf="loading" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-<div class="flex flex-col items-center">
-  <div class="animate-spin border-4 border-t-4 border-white border-opacity-50 rounded-full w-16 h-16 mb-4"></div>
-  <p class="text-white text-lg">{{ loadingMessage }}</p>
-</div>
-</div>
-
-
         </div>
       </div>
+    </div>
 
-      <!-- Si el carrito está vacío -->
-      <div *ngIf="cartItems.length === 0" class="text-center text-gray-600">
-        <p>Tu carrito está vacío.</p>
-        <button
-          (click)="goBackToStore()"
-          class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300 mt-4"
-        >
-          Regresar a Home
-        </button>
-      </div>
-    </div> <!-- Fin sección Derecha -->
-
-  </div> <!-- Fin contenedor unificado -->
+  </div> 
 </div>

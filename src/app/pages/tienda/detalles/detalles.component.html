@@ -1,10 +1,14 @@
 <app-encabezado></app-encabezado>
-<div class="container mx-auto max-w-3xl p-6">
- 
-    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Detalles del Producto</h2>
-  
-    <div class=" rounded-xl p-6 ">
-     <app-producto-details [productoId]="productoId"/>
-    </div>
+
+<div class="container mx-auto max-w-auto p-2">
+
+  <h2 class="text-4xl font-semibold text-gray-800 mb-8 text-center"style="font-family: 'Barlow', sans-serif;">
+    Detalles del Producto
+  </h2>
+
+
+  <div class="bg-white p-10" style="font-family: 'Barlow', sans-serif;">
+    <app-producto-details [productoId]="productoId"></app-producto-details>
   </div>
   
+</div>

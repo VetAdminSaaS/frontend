@@ -51,7 +51,8 @@ export class CartComponent implements OnInit {
     identificationDocumentId: 0,
     company: '',
     tradeName: '',
-    dv: 0
+    dv: 0,
+    userId:0
   }; 
    private purchaseService = inject(PurchaseService);
   private checkoutService = inject(CheckoutService);
@@ -101,6 +102,8 @@ ngOnInit(): void {
       identificationDocumentId: user.identificationDocumentId || 0,
       company: user.company !== null && user.company !== undefined ? user.company : '',
 tradeName: user.tradeName !== null && user.tradeName !== undefined ? user.tradeName : '',
+      userId: user.id,
+      
 
       dv: user.dv || 0,
     };
@@ -244,6 +247,9 @@ async proceedToCheckout(): Promise<void> {
         is_excluded: item.is_excluded ?? false,
         tribute_id: item.tribute_id ?? null,
         withholding_taxes: Array.isArray(item.withholding_taxes) ? item.withholding_taxes : [],
+        costoDespacho: item.costoDespacho,
+        selectedQuantity: item.selectedQuantity,
+        stock: item.stock,
       })),
     };
 

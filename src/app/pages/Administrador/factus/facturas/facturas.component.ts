@@ -17,6 +17,8 @@ import { ProductoService } from '../../../../core/services/producto.service';
 import { Productos } from '../../../../shared/models/productos.model';
 import { FormArray } from '@angular/forms';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { ProductoDetalles } from '../../../../shared/models/productoDetalles.model';
+import { Paises } from '../../../../shared/models/Paises.model';
 
 
 @Component({
@@ -38,14 +40,16 @@ export class FacturasComponent {
   total: number = 0;
   rangosNumericos : RangosNumeracion[] = [];
   municipios : Municipios[] = [];
+  paises: Paises[] = [];
   unidades : UnidadMedidaResponse[]=[];
   tributos: TributosProductos[] =[];  
   isCreditPayment = false;
   isNITSelected = false;
+  discount_rate: number =0;
   selectedOrganizationType: string ='';
-  productos: Productos[] = [];
-  productosFiltrados: Productos[] = [];
-  productosSeleccionados: Productos[] = [];
+  productos: ProductoDetalles[] = [];
+  productosFiltrados: ProductoDetalles[] = [];
+  productosSeleccionados: ProductoDetalles[] = [];
   filtro: string = '';
   startTimeWithSeconds: string = '';
 
@@ -83,19 +87,16 @@ export class FacturasComponent {
         municipality_id: ['', Validators.required]
       }),
       payment_due_date: [''],
-      items: this.fb.array([]) // Inicializar siempre el FormArray
+      items: this.fb.array([])
     });
 
     console.log("Formulario inicializado correctamente:", this.form);
   
-
-  
-  
-    // Cargar datos después de inicializar el formulario
     this.loadRangos();
     this.loadMunicipios();
     this.loadunidadesMedida();
     this.loadTributosProducto();
+    this.loadPaises();
   
     this.productosService.getProductos().subscribe(data => {
       this.productos = data;
@@ -153,30 +154,30 @@ export class FacturasComponent {
 
 
 
-  seleccionarProducto(items: Productos) {
+  seleccionarProducto(items: ProductoDetalles) {
     console.log("Antes de agregar producto:", this.productosArray.value);
   
     const existe = this.productosArray.controls.some(control => 
-      control.value.code_reference === items.codeReference
+      control.value.code_reference === items.code_reference
     );
   
     if (!existe) {
       const quantity = 1; 
       const price = items.price || 0;
   
-      const totalConDescuento = (items.price * (items.discountRate / 100)) * items.quantity;
+      const totalConDescuento = (items.price * (items.discount_rate / 100)) * items.quantity;
   
       
       const productoForm = this.fb.group({
         id: [items.id],
-        code_reference: [items.codeReference],
+        code_reference: [items.code_reference],
         name: [items.name],
         price: [price],
         quantity: [quantity, [Validators.required, Validators.min(1)]],
-        unit_measure_id: [items.unitMeasureId],
-        tax_rate: [items.taxRate],
+        unit_measure_id: [items.unit_measure_id],
+        tax_rate: [items.tax_rate],
         tribute_id: [items.tributeId],  
-        discount_rate: [items.discountRate],
+        discount_rate: [items.discount_rate],
         coverPath: [items.coverPath],
         standard_code_id: [items.standardCodeId],
         is_excluded: [items.isExcluded],
@@ -271,6 +272,16 @@ onSubmit(): void {
       }
     });
   }
+  private loadPaises(): void {
+    this.rangoNumeracionService.getPaises().subscribe({
+      next: (data) => {
+        this.paises = data;
+      },
+      error: (error) => {
+        console.error("Error cargando unidades de medida:", error);
+      }
+    });
+  }
   
   private loadMunicipios(): void{
     this.factusconexion.getMunicipios().subscribe({
@@ -296,13 +307,19 @@ onSubmit(): void {
   filtrarProductos() {
     this.productosFiltrados = this.productos.filter(p =>
       p.name.toLowerCase().includes(this.filtro.toLowerCase()) || 
-      p.codeReference.toLowerCase().includes(this.filtro.toLowerCase())
+      p.code_reference.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
   calcularSubtotal(productoForm: FormGroup): number {
   const cantidad = productoForm.get('quantity')?.value || 1;
   const precio = productoForm.get('price')?.value || 0;
   return cantidad * precio;
+}
+calcularDescuento(productoForm: FormGroup): number {
+  const cantidad = productoForm.get('quantity')?.value || 1;
+  const precio = productoForm.get('price')?.value || 0;
+  const descuento = productoForm.get('discount_rate')?.value ||0;
+  return cantidad * precio - (descuento*cantidad);
 }
   private loadTributosProducto():void {
     this.factusconexion.getTributos().subscribe({

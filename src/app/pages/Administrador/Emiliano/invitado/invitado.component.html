@@ -1,0 +1,109 @@
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-sidebar-factus></app-sidebar-factus>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-4 lg:p-6 mt-16">
+    <div class="flex flex-col xl:flex-row space-y-8 xl:space-y-0 xl:space-x-10 "> <!-- Cambié lg por xl -->
+      <!-- Botón para abrir el modal en pantallas ≤ 1440px -->
+      <div class="w-full xl:hidden"> <!-- Cambié lg por xl -->
+        <button (click)="openModal()"
+          class="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200">
+          Crear Invitado
+        </button>
+      </div>
+
+      <!-- Formulario de Crear/Editar Invitado (visible en pantallas ≥ 1441px) -->
+      <div class="w-full xl:max-w-md bg-white shadow-xl rounded-xl h-full hidden xl:block mb-8"> <!-- Cambié lg por xl -->
+        <div class="p-4 border-b border-gray-200">
+          <h2 class="text-xl font-bold text-gray-800">
+            {{ isEditing ? 'Editar Invitado' : 'Crear Invitado' }}
+          </h2>
+        </div>
+        <!-- Formulario -->
+        <form [formGroup]="invitadoForm" (ngSubmit)="saveInvitado()" class="p-4 space-y-4">
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+            <input id="nombre" type="text" formControlName="nombre"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+          </div>
+          <div class="flex justify-end space-x-4">
+            <button *ngIf="isEditing" type="button" (click)="resetForm()"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-200">
+              Cancelar
+            </button>
+            <button type="submit"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200">
+              {{ isEditing ? 'Actualizar' : 'Crear' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabla de Invitados -->
+      <div class="flex-1 w-full xl:max-w-4xl bg-white shadow-xl rounded-xl overflow-hidden"> <!-- Cambié lg por xl -->
+        <div class="p-4 border-b border-gray-200">
+          <h2 class="text-xl font-bold text-gray-800">Lista de Invitados</h2>
+        </div>
+        <div class="overflow-x-auto max-h-[1000px]">
+          <table class="min-w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">Mesa</th> <!-- Cambié lg por xl -->
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let invitado of invitados" class="hover:bg-gray-50 transition duration-200">
+                <td class="px-4 py-3 text-sm text-gray-900">{{ invitado.id }}</td>
+                <td class="px-4 py-3 text-sm text-gray-900">{{ invitado.nombre }}</td>
+                <td class="px-4 py-3 text-sm text-gray-900 hidden xl:table-cell">{{ invitado.numeroMesa }}</td> <!-- Cambié lg por xl -->
+                <td class="px-4 py-3 text-sm text-right">
+                  <button (click)="editInvitado(invitado)"
+                    class="px-3 py-1 text-sm font-medium text-yellow-600 bg-yellow-100 rounded-lg hover:bg-yellow-200 transition duration-200">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                  </button>
+                  <button (click)="deleteInvitado(invitado.id)"
+                    class="ml-2 px-3 py-1 text-sm font-medium text-red-600 bg-red-100 rounded-lg hover:bg-red-200 transition duration-200">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  
+  <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm">
+      <div class="p-4 border-b border-gray-200">
+        <h2 class="text-xl font-bold text-gray-800">
+          {{ isEditing ? 'Editar Invitado' : 'Crear Invitado' }}
+        </h2>
+      </div>
+      <!-- Formulario dentro del modal -->
+      <form [formGroup]="invitadoForm" (ngSubmit)="saveInvitado()" class="p-4 space-y-4">
+        <div>
+          <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+          <input id="nombre" type="text" formControlName="nombre"
+            class="mt-1 block w-11/12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+        </div>
+        <div class="flex justify-end space-x-4">
+          <button type="button" (click)="closeModal()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-200">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200">
+            {{ isEditing ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

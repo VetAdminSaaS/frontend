@@ -1,0 +1,83 @@
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-50 to-pink-50 p-6"style="font-family: 'Barlow', sans-serif;">
+    <div class="bg-white p-10 rounded-3xl w-full max-w-2xl text-center relative overflow-hidden shadow-2xl">
+      <!-- Efecto de fondo decorativo -->
+      <div class="absolute inset-0 z-0">
+        <div class="absolute -top-20 -left-20 w-48 h-48 bg-purple-200 rounded-full opacity-30 animate-float"></div>
+        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-pink-200 rounded-full opacity-30 animate-float-reverse"></div>
+      </div>
+  
+      <!-- Icono y título -->
+      <div class="relative z-10 mb-10">
+        <!-- Ilustración personalizada (SVG) -->
+        <svg class="w-32 h-32 mx-auto mb-6 animate-float" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <path fill="#6366F1" d="M32 2C15.4 2 2 15.4 2 32s13.4 30 30 30 30-13.4 30-30S48.6 2 32 2zm0 56C17.6 58 6 46.4 6 32S17.6 6 32 6s26 11.6 26 26-11.6 26-26 26z"/>
+          <path fill="#EC4899" d="M32 12c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 36c-8.8 0-16-7.2-16-16s7.2-16 16-16 16 7.2 16 16-7.2 16-16 16z"/>
+          <path fill="#8B5CF6" d="M32 22c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 16c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/>
+        </svg>
+        <h1 class="text-5xl font-extrabold text-gray-900 mt-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          ¡Tu espacio está a salvo!
+        </h1>
+      </div>
+  
+      <!-- Mensaje principal -->
+      <p class="text-gray-700 text-xl mb-10 relative z-10">
+        Sabemos que a veces necesitas un descanso, y está genial. Cuando estés listo para volver, sigue estos pasos para reactivar tu cuenta:
+      </p>
+  
+      <!-- Pasos para reactivar -->
+      <div class="text-left text-gray-800 space-y-6 mb-10 relative z-10">
+        <div class="flex items-start">
+          <span class="text-4xl mr-4 text-purple-600 animate-spin">✨</span>
+          <p class="text-xl font-medium">Haz clic en el enlace de reactivación que te enviamos por correo.</p>
+        </div>
+        <div class="flex items-start">
+          <span class="text-4xl mr-4 text-pink-600 animate-bounce">🔄</span>
+          <p class="text-xl font-medium">Si el enlace expiró, solicita uno nuevo desde la página de inicio de sesión.</p>
+        </div>
+        <div class="flex items-start">
+          <span class="text-4xl mr-4 text-purple-600 animate-pulse">📧</span>
+          <p class="text-xl font-medium">¿Problemas? Escríbenos y te ayudamos con gusto. 🐾</p>
+        </div>
+      </div>
+  
+      <!-- Mensaje final -->
+      <p class="text-gray-700 text-xl mb-10 relative z-10">¡Estamos emocionados de verte de vuelta! 💖</p>
+  
+      <!-- Botón de acción -->
+      <button
+        (click)="goToHome()"
+        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 relative z-10"
+      >
+        Volver al inicio
+      </button>
+    </div>
+  </div>
+  
+  <!-- Animaciones personalizadas -->
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes float-reverse {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-float-reverse { animation: float-reverse 3s ease-in-out infinite; }
+    .animate-spin { animation: spin 2s linear infinite; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .animate-bounce { animation: bounce 1.5s infinite; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-pulse { animation: pulse 1.5s infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+  </style>

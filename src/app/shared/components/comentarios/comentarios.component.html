@@ -1,0 +1,130 @@
+<!-- Contenedor Principal -->
+<div class="max-w-7xl mx-auto p-6 bg-white rounded-2xl  space-y-8">
+  <!-- Encabezado y Botón -->
+  <div class="flex flex-col md:flex-row justify-between items-center pb-6 border-b border-gray-100">
+    <div class="mb-4 md:mb-0">
+      <h2 class="text-3xl font-bold text-gray-900">Opiniones del Producto</h2>
+      <p class="text-gray-500 mt-1">Lo que dicen nuestros clientes</p>
+    </div>
+    <button (click)="abrirModal()"
+      class="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-3 hover:from-orange-600 hover:to-amber-600 transition-all transform hover:scale-105 font-semibold rounded-full shadow-md flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Escribir Reseña
+    </button>
+  </div>
+
+  <!-- Calificación Promedio -->
+  <div class="bg-indigo-50 p-8 rounded-xl">
+    <div class="flex flex-wrap gap-8 items-center">
+      <div class="text-center space-y-2">
+        <div class="text-6xl font-bold text-indigo-700">{{ promedioRating | number:'1.1-1' }}</div>
+        <div class="flex justify-center">
+          <div class="flex items-center">
+            <span *ngFor="let star of [1, 2, 3, 4, 5]" 
+              class="text-3xl"
+              [ngClass]="star <= promedioRating ? 'text-amber-400' : 'text-gray-300'">★</span>
+          </div>
+        </div>
+        <p class="text-gray-600">de 5 estrellas</p>
+      </div>
+      
+      <!-- Barras de Rating -->
+      <div class="flex-1 min-w-[300px] border-l border-gray-200 pl-8">
+        <div class="space-y-3">
+          <div *ngFor="let nivel of [5, 4, 3, 2, 1]" class="flex items-center gap-4">
+            <span class="w-8 text-gray-700 font-medium text-right">{{ nivel }}★</span>
+            <div class="flex-1 bg-gray-100 h-3 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-amber-400 to-orange-400 transition-all duration-500"
+                [style.width.%]="totalVotos > 0 ? (ratingDistribucion[nivel] || 0) * 100 / totalVotos : 0">
+              </div>
+            </div>
+            <span class="w-16 text-gray-600 text-sm">{{ ratingDistribucion[nivel] || 0 }} votos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Comentarios -->
+  <div *ngIf="comentarios.length; else noComentarios" class="space-y-6">
+    <div *ngFor="let comentario of comentarios" class="p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+      <div class="grid grid-cols-[auto_1fr] gap-4 items-start">
+        <!-- Avatar -->
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-700 font-bold rounded-xl flex items-center justify-center text-lg uppercase">
+          {{ comentario.nombreUsuario.charAt(0) }}
+        </div>
+
+        <!-- Contenido -->
+        <div>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="font-semibold text-gray-900">{{ comentario.nombreUsuario }}</span>
+            <span class="text-sm text-gray-500">{{ comentario.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="flex mt-1">
+            <span *ngFor="let star of [1, 2, 3, 4, 5]" 
+              class="text-xl"
+              [ngClass]="comentario.rating >= star ? 'text-amber-400' : 'text-gray-300'">★</span>
+          </div>
+          <p class="text-gray-700 mt-3 leading-relaxed">{{ comentario.comentario }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje sin comentarios -->
+  <ng-template #noComentarios>
+    <div class="text-center p-12 bg-gray-50 rounded-xl border-2 border-dashed">
+      <p class="text-gray-500 text-lg">¡Sé el primero en compartir tu experiencia!</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal -->
+<div *ngIf="mostrarModal" class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-4">
+  <div class="bg-white p-8 max-w-lg w-full rounded-2xl shadow-xl animate-fade-in">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">Cuéntanos tu experiencia</h2>
+      <button (click)="cerrarModal()" class="text-gray-400 hover:text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <form [formGroup]="comentarioForm" (ngSubmit)="enviarComentario()" class="space-y-6">
+      <!-- Rating -->
+      <div class="text-center">
+        <div class="flex justify-center space-x-2 mb-4">
+          <ng-container *ngFor="let nivel of [1, 2, 3, 4, 5]">
+            <button type="button" (click)="seleccionarRating(nivel)"
+              class="w-12 h-12 cursor-pointer transition-transform hover:scale-125"
+              [ngClass]="ratingSeleccionado >= nivel ? 'text-amber-400' : 'text-gray-300'">
+              <svg fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 00.95.69h4.18c.969 0 1.372 1.24.588 1.81l-3.386 2.46a1 1 0 00-.364 1.118l1.286 3.974c.3.921-.755 1.688-1.538 1.118l-3.386-2.46a1 1 0 00-1.176 0l-3.386 2.46c-.783.57-1.838-.197-1.538-1.118l1.286-3.974a1 1 0 00-.364-1.118L2.045 9.401c-.784-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.974z"/>
+              </svg>
+            </button>
+          </ng-container>
+        </div>
+        <p class="text-sm text-gray-500">Selecciona tu calificación</p>
+      </div>
+
+      <!-- Comentario -->
+      <textarea rows="4" placeholder="Escribe tu experiencia con el producto..." formControlName="comentario"
+        class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-300 focus:border-amber-400 transition-all"></textarea>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-4">
+        <button type="button" (click)="cerrarModal()"
+          class="px-6 py-3 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+          Cancelar
+        </button>
+        <button type="submit"
+          class="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl shadow-md transition-all">
+          Publicar Reseña
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

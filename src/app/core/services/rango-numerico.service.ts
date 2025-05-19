@@ -9,6 +9,7 @@ import { UnidadMedidaResponse } from "../../shared/models/unidad-medida-response
 import { Municipios } from "../../shared/models/municipios.model";
 import { Facturas } from "../../shared/models/facturas.model";
 import { TributosProductos } from "../../shared/models/tributos-productos.model";
+import { Paises } from "../../shared/models/Paises.model";
 
 @Injectable({
     providedIn: 'root',
@@ -31,15 +32,22 @@ export class rangoNumericoService {
     getTributos(): Observable<TributosProductos[]>{
         return this.http.get<TributosProductos[]>(`${this.baserURL}/tributos`)
     }
+    getPaises(): Observable<Paises[]>{
+        return this.http.get<Paises[]>(`${this.baserURL}/paises`)   
+
+    }
     getFacturas(page: number, limit: number, filters: string = ''): Observable<any> {
         let url = `${this.baserURL}/obtener/facturas?page=${page}&limit=${limit}`;
         
-        if (filters.trim()) { // Solo añadir filtros si existen
+        if (filters.trim()) { 
             url += `&${filters}`;
         }
     
         return this.http.get<any>(url);
     }
+   
+    
+    
     
       
     crearFactura(factura: Facturas, purchaseId: number): Observable<Facturas> {
@@ -53,7 +61,7 @@ export class rangoNumericoService {
         const url = `${this.baserURL}/download-pdf/${number}`;
         
         return this.http.get(url, {
-          responseType: 'blob' // 🔹 Recibir el PDF como archivo binario
+          responseType: 'blob' 
         });
       }
       eliminarFactura(reference_code:string): Observable<void>{

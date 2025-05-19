@@ -1,126 +1,394 @@
-<nav class="bg-white shadow-lg sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-20">
-      <!-- Logo -->
-      <div class="flex items-center">
-        <a href="#" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors duration-200">
-          Veterinaria Amigos
+<nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50" style="font-family: 'Barlow', sans-serif;">
+  <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center h-20 gap-4 py-2">
+      <!-- Logo y Menú móvil -->
+      <div class="flex items-center justify-between w-full md:w-auto md:block">
+        <a href="#" class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-blue-600 transition-all duration-500">
+          🐾 Veterinaria Amigos
         </a>
+        
+       
       </div>
 
-      <!-- Menú de Navegación (oculto en móviles) -->
-      <div class="hidden md:flex items-center space-x-8">
-        <a href="#" class="text-gray-800 hover:text-blue-600 px-3 py-2 transition-colors duration-200">Inicio</a>
-        <a href="#" class="text-gray-800 hover:text-blue-600 px-3 py-2 transition-colors duration-200">Productos</a>
-        <a href="#" class="text-gray-800 hover:text-blue-600 px-3 py-2 transition-colors duration-200">Contacto</a>
-      </div>
+      <!-- Barra de búsqueda centrada -->
+      <div class="flex-1 w-full md:max-w-2xl lg:max-w-3xl mx-4 order-3 md:order-2 ">
+        <div class="relative group">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="searchProductos()"
+            placeholder="Buscar productos, medicamentos, accesorios..."
+            class="w-full py-3 pl-14 pr-10 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 hover:border-blue-300 shadow-sm"
+          />
 
-      <!-- Carrito e Iniciar Sesión -->
-      <div class="flex items-center space-x-6">
-        <!-- Carrito de Compras -->
-        <a
-          routerLink="/store/cart"
-          class="relative flex items-center p-2 text-gray-800 hover:text-blue-600 transition-all duration-300 ease-in-out transform hover:scale-105"
-        >
-          <!-- Ícono del carrito con animación de rotación -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 transition-transform duration-300 ease-in-out hover:rotate-[-10deg]"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-
-          <!-- Indicador de cantidad de productos en el carrito con animación de rebote -->
-          <span
-            *ngIf="cartItemCount > 1"
-            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce"
-          >
-            {{ cartItemCount }}
-          </span>
-        </a>
-
-        <!-- Iniciar Sesión o Menú de Usuario -->
-        <div class="relative">
-          <!-- Botón de Usuario (Si está autenticado) -->
-          <button
-            *ngIf="isCustomer || isAdmin"
-            (click)="toggleDropdown()"
-            class="flex items-center text-gray-800 hover:text-blue-600 p-2 transition-colors duration-200"
-            aria-label="Abrir menú de usuario"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
+          <!-- Icono de lupa animado -->
+          <div class="absolute left-4 top-3.5 animate-pulse">
+            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-            <span *ngIf="customerName" class="ml-2 text-sm sm:text-base font-medium text-left">
-              ¡Hola, {{ customerName }}!
-            </span>
+          </div>
+
+          <!-- Botón para limpiar con animación -->
+          <button
+            *ngIf="searchQuery"
+            (click)="clearSearch()"
+            class="absolute right-3 top-3.5 p-1 text-gray-400 hover:text-blue-600 transition-transform duration-300 hover:scale-125"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
           </button>
 
-          <!-- Botón "Iniciar Sesión" (Si NO está autenticado) -->
-          <a
-            *ngIf="!isCustomer && !isAdmin"
-            routerLink="/login"
-            class="flex items-center text-gray-800 hover:text-blue-600 p-2 transition-colors duration-200"
-            aria-label="Ir a la página de inicio de sesión"
+          <!-- Resultados de búsqueda mejorados -->
+          <div 
+            *ngIf="searchQuery && filteredProductos?.length"
+            class="absolute w-full mt-3 bg-white rounded-xl shadow-2xl max-h-[70vh] overflow-y-auto z-50 border border-gray-100"
           >
+            <div class="divide-y divide-gray-100">
+              <div 
+                *ngFor="let producto of filteredProductos"
+                class="flex items-center p-4 hover:bg-blue-50/50 cursor-pointer transition-all duration-200 group"
+                (click)="verProducto(producto)"
+              >
+                <div class="relative">
+                  <img 
+                    [src]="producto.coverPath || 'placeholder.jpg'" 
+                    alt="{{ producto.name }}"
+                    class="w-20 h-20 object-cover rounded-xl border-2 border-gray-200 group-hover:border-blue-300 transition-colors"
+                  >
+                  <div class="absolute -bottom-2 -right-2 bg-white px-2 py-1 rounded-full border shadow-sm text-xs font-medium">
+                    #{{ producto.code_reference }}
+                  </div>
+                </div>
+                <div class="ml-4 flex-1 min-w-0">
+                  <div class="flex items-baseline justify-between">
+                    <h3 class="text-lg font-semibold text-gray-800 truncate">{{ producto.name }}</h3>
+                    <span class="text-xl font-bold text-blue-600 ml-2 whitespace-nowrap">
+                      {{ producto.price | currency }}
+                    </span>
+                  </div>
+                  <p *ngIf="producto.descripcion" class="text-sm text-gray-600 mt-1 line-clamp-2">
+                    {{ producto.descripcion }}
+                  </p>
+                  <div class="mt-2 flex items-center space-x-2">
+                    <span class="px-2.5 py-0.5 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                        <circle cx="4" cy="4" r="3"/>
+                      </svg>
+                      En stock
+                    </span>
+                    <span class="text-xs text-gray-500">• {{ producto.sucursalesStock }} sucursales</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensaje sin resultados mejorado -->
+          <div 
+            *ngIf="searchQuery && !filteredProductos?.length"
+            class="absolute w-full mt-3 p-6 bg-white rounded-xl shadow-xl border border-gray-100"
+          >
+            <div class="text-center text-gray-500">
+              <div class="mb-3 inline-block">
+                <svg class="w-10 h-10 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="font-medium">No encontramos "<span class="text-blue-600">{{ searchQuery }}</span>"</p>
+              <p class="text-sm mt-1">Prueba con otras palabras clave</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Iconos de usuario y carrito -->
+      <div class="flex items-center space-x-5 order-2 md:order-3">
+        <!-- Carrito mejorado -->
+        <button
+          (click)="openCartDrawer()"
+          class="relative p-2.5 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300 group"
+        >
+          <div class="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
+              class="w-8 h-8 text-blue-600 group-hover:scale-110 transition-transform"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <span class="ml-2 text-sm sm:text-base font-medium">Iniciar Sesión</span>
-          </a>
+            <span
+              *ngIf="cartItemCount > 0"
+              class="absolute -top-2.5 -right-2.5 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce"
+            >
+              {{ cartItemCount }}
+            </span>
+          </div>
+        </button>
 
-          <!-- Dropdown Menu -->
+        <!-- Menú usuario mejorado -->
+        <div class="relative">
+          <button
+          *ngIf="isCustomer || isAdmin"
+          (click)="toggleDropdown()"
+          class="flex items-center text-gray-800 hover:text-blue-600 p-2 transition-colors duration-200"
+          aria-label="Abrir menú de usuario"
+        >
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white">
+            {{ customerName?.charAt(0) || '' }}
+          </div>
+          <span *ngIf="customerName" class="ml-2 text-sm sm:text-base font-medium text-left">
+            ¡Hola, {{ customerName }}!
+          </span>
+        </button>
+        <a
+        *ngIf="!isCustomer && !isAdmin"
+        routerLink="/login"
+        class="flex items-center text-gray-800 hover:text-blue-600 p-2 transition-colors duration-200"
+        aria-label="Ir a la página de inicio de sesión"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+          />
+        </svg>
+        <span class="ml-2 text-sm sm:text-base font-medium">Iniciar Sesión</span>
+      </a>
+
+          <!-- Dropdown Menu moderno -->
           <div
             *ngIf="isDropdownOpen && isCustomer"
-            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+            class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl z-50 border border-gray-100 overflow-hidden"
           >
-            <a
-              routerLink="/customer/mi-cuenta"
-              class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
-            >
-              Mi Cuenta
-            </a>
-            <button
-              (click)="logout()"
-              class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
-            >
-              Cerrar Sesión
-            </button>
+            <div class="p-2">
+              <a
+                routerLink="/customer/mi-cuenta"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Mi Cuenta
+              </a>
+              <button
+                (click)="logout()"
+                class="w-full flex items-center px-4 py-3 text-gray-700 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <svg class="w-5 h-5 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                Cerrar Sesión
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Menú móvil -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg z-50">
+      <div class="flex justify-around items-center py-3 safe-area-bottom">
+        <!-- Inicio -->
+        <a 
+          href="#" 
+          class="flex flex-col items-center text-gray-600 hover:text-blue-600 active:scale-95 transition-all duration-200 relative"
+          routerLinkActive="text-blue-600"
+        >
+          <div class="p-2 rounded-full bg-blue-50/0 hover:bg-blue-50 transition-colors">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+          </div>
+          <span class="text-[0.7rem] font-medium mt-0.5">Inicio</span>
+        </a>
+    
+        <!-- Productos con contador del carrito -->
+        <a 
+          href="#" 
+          class="flex flex-col items-center text-gray-600 hover:text-blue-600 active:scale-95 transition-all duration-200 relative"
+          routerLinkActive="text-blue-600"
+        >
+          <div class="p-2 rounded-full bg-blue-50/0 hover:bg-blue-50 transition-colors relative">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <span 
+              *ngIf="cartItemCount > 0"
+              class="absolute -top-1 -right-1 bg-red-500 text-white text-[0.6rem] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
+            >
+              {{ cartItemCount }}
+            </span>
+          </div>
+          <span class="text-[0.7rem] font-medium mt-0.5">Productos</span>
+        </a>
+        <button
+          (click)="openCartDrawer()"
+          class="relative p-2.5 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300 group"
+        >
+          <div class="relative">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-8 h-8 text-blue-600 group-hover:scale-110 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <span
+              *ngIf="cartItemCount > 0"
+              class="absolute -top-2.5 -right-2.5 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce"
+            >
+              {{ cartItemCount }}
+            </span>
+          </div>
+        </button>
+    
+       
+    
+        <!-- Menú usuario móvil -->
+        <button 
+          *ngIf="isCustomer || isAdmin"
+          class="flex flex-col items-center text-gray-600 hover:text-blue-600 active:scale-95 transition-all duration-200"
+          (click)="toggleDropdown()"
+        >
+          <div class="p-2 rounded-full bg-blue-50/0 hover:bg-blue-50 transition-colors">
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+              {{ customerName?.charAt(0) || '?' }}
+            </div>
+          </div>
+          <span class="text-[0.7rem] font-medium mt-0.5">Cuenta</span>
+        </button>
+      </div>
+      
+    </div>
+    
+  
   </div>
 </nav>
+
+<!-- Modal Lateral (Drawer) del Carrito -->
+<div *ngIf="isCartDrawerOpen" class="fixed inset-0 z-50 flex">
+  <!-- Fondo oscuro con efecto de blur -->
+  <div class="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" (click)="closeCartDrawer()"></div>
+
+  <!-- Contenedor del Drawer -->
+  <div class="fixed right-0 top-0 h-full w-full max-w-md bg-white transform transition-transform duration-300 ease-in-out flex flex-col">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center px-6 py-5 border-b border-gray-100">
+      <div class="flex items-center gap-3">
+        <h2 class="text-xl font-semibold text-gray-900">Tu Carrito</h2>
+        <span class="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ cartItems.length }} items</span>
+      </div>
+      <button (click)="closeCartDrawer()" class="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+      <div *ngFor="let item of cartItems" class="group flex gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors">
+        <img [src]="item.coverPath" alt="Producto" class="w-16 h-16 object-cover rounded-lg border border-gray-200">
+        
+        <div class="flex-1 grid gap-1">
+          <div class="flex justify-between items-start">
+            <h3 class="text-base font-medium text-gray-900 line-clamp-2">{{ item.name }}</h3>
+            <button (click)="removeFromCart(item)" class="text-gray-300 hover:text-red-500 p-1 -mt-1 -mr-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Controles de Cantidad Mejorados -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 border border-gray-200 rounded-lg p-1">
+              <button 
+                (click)="decreaseQuantity(item)"
+                class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 rounded-md">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                </svg>
+              </button>
+              <span class="mx-2 text-sm font-medium">{{ item.quantity }}</span>
+              <button 
+                (click)="increaseQuantity(item)"
+                class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 rounded-md">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+              </button>
+            </div>
+            
+            <p class="text-base font-semibold text-purple-600">${{ (item.price * item.quantity).toFixed(2) }}</p>
+          </div>
+          
+          <div class="flex items-center gap-2 text-sm text-gray-500">
+            <span>${{ item.price.toFixed(2) }} c/u</span>
+            <span class="text-gray-300">•</span>
+            <span [ngClass]="{'text-green-600': item.stock > 0, 'text-red-600': item.stock <= 0}">
+              {{ item.stock > 0 ? 'En stock' : 'Agotado' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen de Compra -->
+    <div class="border-t border-gray-100 bg-white pt-4 pb-6 px-6">
+      <div class="space-y-3 mb-6">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600">Subtotal:</span>
+          <span class="font-medium text-gray-900">{{ totalPrice | currency }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600">Descuento:</span>
+          <span class="font-medium text-red-500">-{{ discount_rate | currency }}</span>
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center mb-6 pt-4 border-t border-gray-100">
+        <span class="text-lg font-semibold text-gray-900">Total:</span>
+        <span class="text-xl font-bold text-purple-600">{{ totalPrice - discount_rate | currency }}</span>
+      </div>
+
+      <a routerLink="/store/cart" class="block">
+        <button class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium py-3.5 rounded-xl transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          Finalizar Compra
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Snackbar para notificaciones -->
+<div *ngIf="showSnack" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+  {{ snackMessage }}
+</div>

@@ -13,6 +13,8 @@ export interface UserProfile {
     company:string;
     tradeName:string;
     dv:number;
+    
+    
 }
 export enum role {
     CUSTOMER = 'CUSTOMER',

@@ -1,0 +1,196 @@
+<div class="flex h-screen bg-gray-50 font-barlow" style="font-family: 'Barlow', sans-serif;">
+    <app-sidebar-factus></app-sidebar-factus>
+    <div class="flex flex-col w-full">
+      <app-navbar></app-navbar>
+      <div class="flex-1 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl font-bold text-gray-800">Gestión de Empleados</h1>
+          <button
+            (click)="openModal()"
+            class="bg-emerald-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-emerald-600 transition-all duration-300 shadow-md"
+          >
+            + Nuevo Empleado
+          </button>
+        </div>
+        <div class="mb-6">
+            <input
+            type="text"
+            [(ngModel)]="filtroNombre"
+            (ngModelChange)="filtrarEmpleados()"
+            placeholder="Buscar por nombre o apellido..."
+            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div *ngFor="let empleado of empleadosFiltrados"
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200 overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-r from-blue-100 to-blue-200 p-6 text-center">
+              <div class="w-48 h-48 mx-auto rounded-full border-4 border-white shadow-md overflow-hidden">
+                <img [src]="empleado.profilePath || 'assets/default-profile.png'" 
+                  alt="Foto de {{ empleado.nombre }}" class="w-full h-full object-cover">
+              </div>
+              <h2 class="text-lg font-bold text-gray-800 mt-3">{{ empleado.nombre }} {{ empleado.apellido }}</h2>
+              <p class="text-sm text-gray-600">{{ empleado.email }}</p>
+              <h2 class="text-lg font-bold text-gray-800 mt-3">{{empleado.tipoEmpleado}}</h2>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons text-gray-500 text-base">badge</span>
+                  <p class="font-semibold">Nro de Documento de Identidad:</p>
+                  <span> {{ empleado.numeroDocumentoIdentidad }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons text-gray-500 text-base">cake</span>
+                  <p class="font-semibold">Fecha de Nacimiento:</p>
+                  <span>{{ empleado.fechaNacimiento }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons text-gray-500 text-base">phone</span>
+                  <p class="font-semibold">Nro de Telefono:</p>
+                  <span>{{ empleado.telefono }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons text-gray-500 text-base">location_on</span>
+                  <p class="font-semibold">Sucursal de Trabajo:</p>
+                  <span>{{ empleado.sucursalName }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons text-gray-500 text-base">calendar_today</span>
+                  <p class="font-semibold text-sm">Fecha de Contratación:</p>
+                  <span>{{ empleado.fechaContratacion }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons text-gray-500 text-base">person</span>
+                  <span [ngClass]="empleado.estado ? 'text-emerald-600' : 'text-rose-600'">
+                    <p class="font-semibold text-sm">Estado:</p>
+                    {{ empleado.estado ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+                <p class="font-semibold">Sucursal:
+                  {{empleado.sucursalName}}</p>
+              </div>
+              <div class="mt-6">
+                <p class="font-semibold text-gray-800">Especialidades:</p>
+                <div class="flex flex-wrap gap-2 mt-1">
+                  <span *ngFor="let especialidad of empleado.especialidadesNombres"
+                    class="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
+                    {{ especialidad }}
+                  </span>
+                </div>
+                <p class="font-semibold text-gray-800 mt-4">Servicios:</p>
+                <div class="flex flex-wrap gap-2 mt-1">
+                  <span *ngFor="let servicio of empleado.nombreServicio"
+                    class="px-3 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-full">
+                    {{ servicio }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end items-center bg-gray-100 px-6 py-4 space-x-3">
+              <button (click)="openModal(empleado)"
+                class="flex items-center px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-100 rounded-lg hover:bg-emerald-200 transition">
+                <span class="material-icons text-base">edit</span>
+                <span class="ml-2">Editar</span>
+              </button>
+              <button (click)="eliminarEmpleado(empleado.id)"
+                class="flex items-center px-4 py-2 text-sm font-medium text-rose-700 bg-rose-100 rounded-lg hover:bg-rose-200 transition">
+                <span class="material-icons text-base">delete</span>
+                <span class="ml-2">Eliminar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">
+          {{ empleadoId ? 'Editar Empleado' : 'Crear Empleado' }}
+        </h2>
+        <form (ngSubmit)="guardarEmpleado()" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input type="email" [(ngModel)]="empleadoFormulario.nombre" name="nombre" placeholder="Nombre" required class="p-2 border border-gray-300 rounded-lg" />
+            <input type="email" [(ngModel)]="empleadoFormulario.apellido" name="apellido" placeholder="Apellido" required class="p-2 border border-gray-300 rounded-lg" />
+            <input type="email" [(ngModel)]="empleadoFormulario.email" name="email" placeholder="Email" required class="p-2 border border-gray-300 rounded-lg" />
+            <input *ngIf="!empleadoId" type="password" [(ngModel)]="empleadosRegistrar.password" name="password" placeholder="Contraseña" [required]="!empleadoId" class="p-2 border border-gray-300 rounded-lg" />
+            <select [(ngModel)]="empleadoFormulario.tipoDocumentoIdentidad" name="tipoDocumentoIdentidad" class="p-2 border border-gray-300 rounded-lg">
+              <option value="DNI">DNI</option>
+              <option value="PASAPORTE">Pasaporte</option>
+              <option value="CARNET_EXTRANJERIA">Carnet de Extranjería</option>
+            </select>
+            <input type="text" [(ngModel)]="empleadoFormulario.numeroDocumentoIdentidad" name="numeroDocumentoIdentidad" placeholder="Número de Documento" class="p-2 border border-gray-300 rounded-lg" />
+            <select [(ngModel)]="empleadoFormulario.genero" name="genero" class="p-2 border border-gray-300 rounded-lg">
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+            </select>
+            <input type="date" [(ngModel)]="empleadoFormulario.fechaContratacion" name="fechaContratacion" class="p-2 border border-gray-300 rounded-lg" />
+            <select [(ngModel)]="empleadoFormulario.estado" name="estado" class="p-2 border border-gray-300 rounded-lg">
+              <option [ngValue]="true">Activo</option>
+              <option [ngValue]="false">Inactivo</option>
+            </select>
+            <select [(ngModel)]="empleadoFormulario.tipoEmpleado" name="tipoEmpleado" class="p-2 border border-gray-300 rounded-lg">
+              <option value="VETERINARIO">Veterinario</option>
+              <option value="ASISTENTE_VETERINARIO">Asistente Veterinario</option>
+              <option value="GROMMER">Grommer</option>
+              <option value="RECEPCIONISTA">Recepcionista</option>
+              <
+              <option value="OTRO">Otro</option>
+            </select>
+          </div>
+<div>
+  <label class="font-semibold">Especialidades:</label>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <div *ngFor="let especialidad of listaEspecialidades; trackBy: trackById" class="flex items-center gap-2">
+      <input 
+        type="checkbox" 
+        [value]="especialidad.id" 
+        (change)="actualizarSeleccionEspecialidad(especialidad.id, $event)" 
+        [checked]="empleadoFormulario.especialidadIds.includes(especialidad.id)" 
+       
+        class="w-4 h-4" 
+      />
+      <span>{{ especialidad.nombre }}</span>
+    </div>
+  </div>
+</div>
+<div>
+  <label class="font-semibold">Servicios:</label>
+  <div *ngFor="let servicio of listaServicios; trackBy: trackById" class="flex items-center gap-2">
+    <input 
+      type="checkbox" 
+      [value]="servicio.id" 
+      (change)="actualizarSeleccionServicios(servicio.id, $event)" 
+      [checked]="empleadoFormulario.serviciosIds.includes(servicio.id)" 
+      
+      class="w-4 h-4" 
+    />
+    <span>{{ servicio.nombre }}</span>
+  </div>
+</div>
+<div>
+  <label class="font-semibold">Seleccionar Sucursal:</label>
+  <div *ngFor="let sucursal of sucursales; trackBy: trackById" class="flex items-center gap-2">
+    <input 
+      type="radio" 
+      [value]="sucursal.id" 
+      [(ngModel)]="empleadoFormulario.sucursalId" 
+      name="sucursal" 
+
+      class="w-4 h-4" 
+    />
+    <span>{{ sucursal.nombre }}</span>
+  </div>
+</div>
+          <div class="flex justify-end space-x-4">
+            <button type="button" (click)="closeModal()" class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg">
+              Cancelar
+            </button>
+            <button type="submit" class="bg-emerald-500 text-white font-semibold py-2 px-4 rounded-lg">
+              {{ empleadoId ? 'Actualizar' : 'Crear' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>

@@ -63,19 +63,22 @@ export class FacturaslistComponent implements OnInit {
 
   loadFacturas() {
     this.isLoading = true;
-    const filters: any = {};
+    const params = new URLSearchParams();
 
-    if (this.filtros.identification) filters['filter[identification]'] = this.filtros.identification;
-    if (this.filtros.names) filters['filter[names]'] = this.filtros.names;
-    if (this.filtros.number) filters['filter[number]'] = this.filtros.number;
-    if (this.filtros.reference_code) filters['filter[reference_code]'] = this.filtros.reference_code;
-    if (this.filtros.status) filters['filter[status]'] = this.filtros.status;
+    params.append('identification', this.filtros.identification?.trim() ?? '');
+    params.append('names', this.filtros.names?.trim() ?? '');
+    params.append('number', this.filtros.number?.trim() ?? '');
+    params.append('referenceCode', this.filtros.reference_code?.trim() ?? '');
+    params.append('status', this.filtros.status?.trim() ?? '');
 
-    const filterQuery = new URLSearchParams(filters).toString();
+    // Convertir parámetros a string
+    const filterQuery = params.toString();
 
+    console.log('📌 Filtros enviados:', filterQuery);
     this.facturaConexion.getFacturas(this.currentPage, this.resultsPerPage, filterQuery).subscribe(
       (response) => {
-        
+       
+
         if (response && response.facturas && Array.isArray(response.facturas)) {
           this.facturas = response.facturas;
           this.totalResults = response.total || 0;
@@ -86,7 +89,7 @@ export class FacturaslistComponent implements OnInit {
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error al cargar las facturas:', error);
+        console.error('❌ Error al cargar las facturas:', error);
         this.facturas = [];
         this.isLoading = false;
       }
@@ -104,6 +107,7 @@ export class FacturaslistComponent implements OnInit {
     };
     this.loadFacturas(); // Cargar facturas sin filtros
   }
+  
 
 
   isStatusActive(status: string): boolean {

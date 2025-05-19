@@ -1,90 +1,100 @@
-<div class="w-80 bg-white text-black shadow-md border-r border-gray-200 h-full flex flex-col p-6 space-y-6">
+<!-- Botón de hamburguesa (Solo en sm y md) -->
+<button class="lg:hidden absolute top-4 left-4 text-gray-600 hover:text-gray-900" (click)="toggleSidebar()">
+  <span class="material-icons text-3xl">menu</span>
+</button>
+
+<!-- Sidebar -->
+<div  style="font-family: 'Barlow', sans-serif;"
+  [ngClass]="{
+    '-translate-x-full': !sidebarOpen && screenWidth < 1024,
+    'translate-x-0': sidebarOpen && screenWidth < 1024
+  }" 
+  class="fixed lg:relative w-80 bg-white text-black shadow-md border-r border-gray-200 h-full flex flex-col p-6 space-y-6 transform transition-all duration-300 ease-in-out lg:translate-x-0 z-50">
+
+  <!-- Botón para cerrar en móviles -->
+  <button class="lg:hidden absolute top-4 right-4 text-gray-600 hover:text-gray-900" (click)="toggleSidebar()">
+    <span class="material-icons text-3xl">close</span>
+  </button>
+
   <!-- Logo -->
   <div class="flex flex-col items-center space-y-3 mb-8">
-    <!-- Nombre del Usuario -->
-    <h2 class="text-xl font-semibold text-gray-800">¡Hola {{ customerName }}!</h2>
-  
-    <!-- Avatar con Iniciales (Más Grande) -->
-    <div class="w-24 h-24 flex items-center justify-center rounded-full bg-purple-500 text-white text-3xl font-bold border-4 border-gray-300">
+    <h2 class="text-xl font-semibold text-gray-800 md:inline text-center" style="font-family: 'Barlow', sans-serif;">
+      ¡Hola {{ customerName }}!
+    </h2>
+    
+    <div class="w-12 h-12 lg:w-24 lg:h-24 flex items-center justify-center rounded-full bg-purple-500 text-white lg:text-3xl font-bold border-4 border-gray-300">
       {{ initials }}
     </div>
   </div>
-  
+
   <!-- Separador -->
   <div class="border mt-1"></div>
-  
-  <!-- Menu -->
+
+  <!-- Menú -->
   <ul class="space-y-4 flex-1">
-    <!-- Inicio -->
     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
       <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
         <span class="material-icons">home</span>
-        <span>Inicio</span>
+        <span class="md:inline">Inicio</span>
       </a>
     </li>
     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
       <a routerLink="/customer/mi-cuenta" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
         <span class="material-icons">person</span>
-        <span>Mi Cuenta</span>
+        <span class="md:inline">Mi Cuenta</span>
       </a>
-   </li>
-   
-
-  
-    
+    </li>
     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
       <a routerLink="/customer/purchases/list" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
         <span class="material-icons">shopping_cart</span>
-        <span>Compras</span>
+        <span class="md:inline">Compras</span>
       </a>
     </li>
-    
-
-    <!-- Reportes -->
     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
       <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
         <span class="material-icons">assessment</span>
-        <span>Reportes</span>
+        <span class="md:inline">Reportes</span>
       </a>
     </li>
     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/customer/pedidos" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">assignment</span>
+        <span class="md:inline">Mis Pedidos</span>
+      </a>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
       <a routerLink="/customer/mis-facturas" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
         <span class="material-icons">receipt_long</span>
-        <span>Mis Facturas</span>
+        <span class="md:inline">Mis Facturas</span>
       </a>
-   </li>
-   <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
-    <a routerLink="/mis-direcciones" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-      <span class="material-icons">location_on</span>
-      <span>Mis Direcciones</span>
-    </a>
- </li>
- 
-   
+    </li>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/customer/direccion" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">location_on</span>
+        <span class="md:inline">Mis Direcciones</span>
+      </a>
+    </li>
+
     <div class="border"></div>
+    
     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
       <a routerLink="/settings" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
         <span class="material-icons">settings</span>
-        <span>Configuración</span>
+        <span class="md:inline">Configuración</span>
       </a>
-   </li>
-   <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
-    <a routerLink="/help" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-      <span class="material-icons">help_outline</span>
-      <span>Ayuda</span>
-    </a>
- </li>
- 
-   
-
-  
+    </li>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/help" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">help_outline</span>
+        <span class="md:inline">Ayuda</span>
+      </a>
+    </li>
   </ul>
 
-  <!-- Footer: Cerrar sesión (fijo en la parte inferior) -->
+  <!-- Footer: Cerrar sesión -->
   <div class="border-t pt-4">
     <a href="#" (click)="logout()" class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out text-gray-600 hover:text-red-600">
       <span class="material-icons">logout</span>
-      <span>Cerrar Sesión</span>
+      <span class="md:inline">Cerrar Sesión</span>
     </a>
   </div>
 </div>

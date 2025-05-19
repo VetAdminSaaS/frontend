@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class SidebarFactusComponent {
   isAuthenticated: boolean = false;
   isCollapsed = false;
+  isSidebarOpen: boolean = false;
 
 
 
@@ -20,7 +21,13 @@ export class SidebarFactusComponent {
 
   ngOnInit(): void {
   this.isAuthenticated = this.authService.isAuthenticated();
+  this.toggleSidebar();
     
+  }
+ 
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
   logout(): void {
     this.authService.logout();

@@ -1,5 +1,5 @@
 export interface UsuarioStoreDTO {
-  
+    id?: number; 
     identification: string;
     names: string;
     address: string;
@@ -8,8 +8,12 @@ export interface UsuarioStoreDTO {
     legalOrganizationId: number;
     tributeId: number;
     municipalityId: number;
-    identificationDocumentId:number;
+    identificationDocumentId: number;
     company?: string;
     tradeName: string;
-    dv:number;
+    dv: number;
+    userId:number;
+   
+    
+    
 }

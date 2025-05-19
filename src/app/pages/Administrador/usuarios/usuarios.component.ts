@@ -6,6 +6,8 @@ import { usuariosStoreService } from '../../../core/services/usuarios.store';
 import { SidebarFactusComponent } from "../../../shared/components/sidebar-factus/sidebar-factus.component";
 import { rangoNumericoService } from '../../../core/services/rango-numerico.service';
 import { Municipios } from '../../../shared/models/municipios.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-usuarios',
@@ -17,8 +19,10 @@ import { Municipios } from '../../../shared/models/municipios.model';
 export class UsuariosComponent {
   user: UserProfile[] = [];
   municipios:Municipios[] =[];
+  private authService = inject(AuthService);
   private usuariosProfile = inject(usuariosStoreService);
   private factusconexion = inject(rangoNumericoService);
+  private toastr = inject(ToastrService);
   identificationTypes: { id: number, name: string }[] = [
     { id: 1, name: 'Registro civil' },
     { id: 2, name: 'Tarjeta de identidad' },
@@ -74,7 +78,14 @@ export class UsuariosComponent {
     const municipio = this.municipios.find(m => m.id === id);
     return municipio ? municipio.name : 'Desconocido';
   }
-
+suspenderUsuario(id:number):void {
+  this.authService.suspendeCuentaUsuario(id).subscribe({
+    next: (response) => {
+      console.log('Cuenta suspendida', response);
+      this.toastr.success("Cuenta suspendida correctamente",'Éxito')
+    }
+  })
+}
   
   
   

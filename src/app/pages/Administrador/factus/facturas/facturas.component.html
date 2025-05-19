@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100">
+<div class="flex h-screen bg-gray-100"style="font-family: 'Barlow', sans-serif;">
   <!-- Sidebar -->
   <app-sidebar-factus></app-sidebar-factus>
 
@@ -329,6 +329,23 @@
                     required
                   />
                 </div>
+                   
+
+               <!-- <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
+                  <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
+                    Pais <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                    formControlName="country_id"
+>
+                    <option value="" disabled selected>Seleccione un municipio</option>
+                    <option *ngFor="let pais of paises" [value]="pais.id">
+                      {{ pais.name }} 
+                    </option>
+                  </select>
+                </div>-->
+                
 
                 <div class="w-full lg:w-6/12 px-4 mb-4"formGroupName="customer">
                   <label class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
@@ -389,48 +406,69 @@
                 </div>
                 
                 <!-- Tabla de productos seleccionados -->
-                <div class="mt-4">
-                  <table class="w-full border-collapse border">
-                    <thead>
+                <div class="mt-6 overflow-x-auto">
+                  <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                    <thead class="bg-blue-600 text-white">
                       <tr>
-                        <th class="border px-4 py-2">Código</th>
-                        <th class="border px-4 py-2">Imagen</th>
-                        <th class="border px-4 py-2">Nombre</th>
-                        <th class="border px-4 py-2">Cantidad</th>
-                        <th class="border px-4 py-2">Precio</th>
-                        <th class="border px-4 py-2">Subtotal</th>
-                        <th class="border px-4 py-2">Acción</th>
+                        <th class="px-6 py-3 text-left">Código</th>
+                        <th class="px-6 py-3 text-left">Imagen</th>
+                        <th class="px-6 py-3 text-left">Nombre</th>
+                        <th class="px-6 py-3 text-left">Cantidad</th>
+                        <th class="px-6 py-3 text-left">Precio</th>
+                        <th class="px-6 py-3 text-left">Subtotal</th>
+                        <th class="px-6 py-3 text-left">Acción</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let productoForm of productosArray?.controls; let i = index" [formGroup]="productoForm">
-
-
-                        <td class="border px-4 py-2">{{ productoForm?.get('code_reference')?.value }}</td>
-                        <td class="border px-4 py-2">
-                          <img [src]="productoForm?.get('coverPath')?.value" alt="Producto" class="w-10 h-10 object-cover rounded">
+                      <tr *ngFor="let productoForm of productosArray?.controls; let i = index" 
+                          [formGroup]="productoForm"
+                          class="border-b hover:bg-gray-100 transition duration-200 ease-in-out">
+                        
+                        <td class="px-6 py-4 text-gray-700">{{ productoForm?.get('code_reference')?.value }}</td>
+                
+                        <td class="px-6 py-4">
+                          <img [src]="productoForm?.get('coverPath')?.value" 
+                               alt="Producto" 
+                               class="w-24 h-24 object-cover">
                         </td>
-                        <td class="border px-4 py-2">{{ productoForm?.get('name')?.value }}</td>
-                        <td class="border px-4 py-2">
-                          <input type="number" formControlName="quantity" min="1" class="w-16 border rounded px-2">
+                
+                        <td class="px-6 py-4 text-gray-700 font-semibold">{{ productoForm?.get('name')?.value }}</td>
+                
+                        <td class="px-6 py-4">
+                          <input type="number" 
+                                 formControlName="quantity" 
+                                 min="1" 
+                                 class="w-20 border rounded-lg px-3 py-1 text-center shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </td>
-                        <td class="border px-4 py-2">{{ productoForm?.get('price')?.value | currency }}</td>
-                        <td class="border px-4 py-2">{{ calcularSubtotal(productoForm) | currency }}</td>
-                        <td class="border px-4 py-2">
-                          <button (click)="eliminarProducto(i)" class="text-red-500">Eliminar</button>
-                        </td>                        
+                
+                        <td class="px-6 py-4 text-blue-600 font-bold">{{ productoForm?.get('price')?.value | currency }}</td>
+                
+                        <td class="px-6 py-4 text-green-600 font-bold">{{ calcularSubtotal(productoForm) | currency }}</td>
+                
+                        <td class="px-6 py-4">
+                          <button (click)="eliminarProducto(i)" 
+                                  class="text-red-500 hover:text-red-700 transition duration-150 flex items-center gap-2">
+                            🗑️ <span class="hidden sm:inline">Eliminar</span>
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
-                  
-                  <!-- Mostrar total general -->
-                  <div class="mt-4 text-right text-lg font-semibold">
-                    Total: {{ totalFactura | currency }}
+                
+                  <!-- Mostrar descuentos y totales -->
+                  <div class="mt-6 flex flex-col sm:flex-row justify-between items-center bg-gray-100 p-4 rounded-lg shadow-md">
+                    <div *ngFor="let productoForm of productosArray?.controls; let i = index" 
+                    [formGroup]="productoForm"
+                    class="text-lg font-semibold text-gray-700">
+                      Descuento: <span class="text-red-500">{{ calcularDescuento(productoForm) | currency }}</span>
+                    </div>
+                    <div class="text-xl font-bold text-gray-800">
+                      Total: <span class="text-green-600">{{ totalFactura | currency }}</span>
+                    </div>
                   </div>
-                  
                 </div>
                 
-              <!-- Botón de acción -->
+         
               <div class="text-center mt-6">
                 <button
                 class="bg-green-500 text-white active:bg-green-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"

@@ -1,0 +1,151 @@
+<div class="flex h-screen bg-gray-100" style="font-family: 'Barlow', sans-serif;">
+    <!-- Sidebar -->
+    <app-sidebar-factus></app-sidebar-factus>
+  
+    <div class="flex flex-col w-full overflow-y-auto">
+        <!-- Navbar -->
+        <app-navbar></app-navbar>
+        
+        <div class=" mx-auto p-4 md:p-6 mt-20 mb-20">
+            <div class="mb-6 flex items-center justify-center">
+                <div class="relative w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
+                    <!-- Input de búsqueda -->
+                    <input
+                        type="text"
+                        [(ngModel)]="searchQuery"
+                        (input)="searchProductos()"
+                        placeholder="Buscar productos..."
+                        class="w-full p-3 pl-10 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    />
+                
+                    <!-- Icono de búsqueda -->
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-icons text-gray-500">search</span>
+                    </span>
+                
+                    <!-- Botón para limpiar búsqueda -->
+                    <button
+                        *ngIf="searchQuery"
+                        (click)="clearSearch()"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none"
+                    >
+                        <span class="material-icons text-gray-500 hover:text-gray-700 transition-colors duration-200">close</span>
+                    </button>
+                </div>
+                <div class="flex justify-end w-full p-4">
+                    <button 
+                        class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 flex items-center gap-2 rounded-lg shadow-md transition-all duration-300"
+                        (click)="navegar()">
+                        <span class="material-icons text-white text-lg">add</span>
+                        Crear Producto
+                    </button>
+                </div>
+                
+                
+                
+            </div>
+        
+            <!-- Productos -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 mt-8">
+                <div *ngFor="let producto of filteredProductos" class="bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 hover:shadow-xl transition-all duration-300">
+                    <!-- Imagen del producto -->
+                    <div class="relative group">
+                        <img class="w-full h-48 md:h-56 lg:h-64 object-cover transition-transform duration-500 group-hover:scale-110" 
+                            [src]="producto.coverPath" 
+                            [alt]="producto.name">
+                        <div class="absolute top-2 left-2 bg-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            Stock: {{ producto.quantity }}
+                        </div>
+                    </div>
+        
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2 hover:text-blue-600 transition duration-300">
+                            {{ producto.name }}
+                        </h3>
+                        <p class="text-gray-500 text-sm mb-2">Código: {{ producto.code_reference }}</p>
+                        <p class="text-gray-500 text-sm mb-2">Categoria: {{ producto.categoryName }}</p>
+                        
+                        <!-- Precio y descuento -->
+                        <div class="flex items-center justify-between mt-2">
+                            <p class="text-xl font-semibold text-blue-600">${{ producto.price.toFixed(2) }}</p>
+                            <span *ngIf="producto.discount_rate > 0" class="text-sm text-red-500 bg-red-100 px-2 py-1 rounded-lg">
+                                -{{ producto.discount_rate }}%
+                            </span>
+                        </div>
+        
+                        <!-- Controles de cantidad -->
+                     
+        
+                        <!-- Botones de acción -->
+                        <div class="mt-4 flex justify-center items-center gap-4">
+                            <!-- Ver detalles -->
+                            <button 
+                                class="border border-gray-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition duration-150 ease-in-out text-2xl rounded-lg p-2"
+                                (click)="viewDetails(producto)"
+                                aria-label="Ver detalles"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        
+                            <!-- Editar producto -->
+                            <button 
+                                class="border border-yellow-300 text-yellow-500 hover:text-yellow-700 hover:bg-yellow-100 transition duration-150 ease-in-out text-2xl rounded-lg p-2"
+                                (click)="updateProducto(producto.id)"
+                                aria-label="Editar producto"
+                            >
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        
+                            <!-- Eliminar producto -->
+                            <button 
+                                class="border border-red-300 text-red-500 hover:text-red-700 hover:bg-red-100 transition duration-150 ease-in-out text-2xl rounded-lg p-2"
+                                (click)="producto.id ? deleteProducto(producto.id) : null"
+
+                                aria-label="Eliminar producto"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                
+            </div>
+            <div class="flex justify-end mt-6 items-center space-x-3">
+                <!-- Botón Anterior -->
+                <button 
+                  class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="pageIndex === 0"
+                  (click)="cambiarPagina(-1)">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              
+                <!-- Paginación Numerada -->
+                <div class="flex items-center space-x-3 bg-white px-6 py-2 rounded-full shadow-md text-gray-700 font-semibold border border-gray-200">
+                  <span class="text-gray-500">Página</span>
+                  <span class="text-blue-600 font-bold text-lg">{{ pageIndex + 1 }}</span>
+                  <span class="text-gray-500">de</span>
+                  <span class="text-gray-500">{{ totalPages }}</span>
+                </div>
+              
+                <!-- Botón Siguiente -->
+                <button 
+                  class="flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-500 text-white font-medium rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="pageIndex >= totalPages - 1"
+                  (click)="cambiarPagina(1)">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+              
+              
+              
+           
+              
+        </div>
+    </div>
+</div>

@@ -13,12 +13,18 @@ referenceCode: string;
 payment_form:number;
 payment_method_code:number;
 billing_period: BillingPeriod[];
-
+shipmentStatus: ShipmentStatus;
 }
 export enum PaymentStatus {
     PENDING = 'PENDING',
     PAID = 'PAID',
     FAILED = 'FAILED'
+}
+export enum ShipmentStatus {
+    COMPRA_RECIBIDA = 'COMPRA_RECIBIDA',
+    COMPRA_CONFIRMADA = 'COMPRA_CONFIRMADA',
+    COMPRA_LISTA_PARA_RETIRAR = 'COMPRA_LISTA_PARA_RETIRAR',
+    COMPRA_ENTREGADA = 'COMPRA_ENTREGADA',
 }
 
 export interface PurchaseItemResponse {

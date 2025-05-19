@@ -1,65 +1,258 @@
-<div class="flex h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-white">
-    <!-- Barra lateral -->
-    <app-sidebar-admin></app-sidebar-admin>
-  
-    <!-- Contenedor principal -->
-    <div class="flex-1 flex flex-col items-center px-8 py-12">
-      <div class="bg-white shadow-xl rounded-2xl w-10/12  border border-gray-200 p-10">
-        <!-- Encabezado -->
-        <div class="text-start mb-8">
+<div class="flex h-screen bg-gray-100" style="font-family: 'Barlow', sans-serif;">
+  <!-- Barra lateral -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- Contenedor principal -->
+   
+  <div class="flex-1 flex flex-col items-center px-12 py-12">
+    
+    <div class="  rounded-2xl w-10/12  p-10">
+      <!-- Encabezado -->
+      <div class="text-start mb-8 flex justify-between items-center">
+        <div>
           <h2 class="text-4xl font-extrabold text-gray-800">
             <span class="text-purple-600">Perfil del Usuario</span>
           </h2>
           <p class="text-gray-500 mt-2 text-lg">Información detallada de tu cuenta</p>
         </div>
-        <div class="border mb-6"></div>
-  
-        <!-- Contenedor de información -->
-        <div class="grid grid-cols-3 gap-y-8 gap-x-12">
-          <!-- Bloques de información -->
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-badge-check text-purple-500 text-2xl"></i>
-            <p class="text-gray-700"><strong>Nombre:</strong> {{ usuarioForm.get('names')?.value }}</p>
+        <!-- Botón Editar -->
+        <button (click)="toggleEditMode()" 
+            class="bg-black hover:bg-black text-white font-bold py-3 px-8 rounded-lg">
+            {{ editMode ? 'Cancelar' : 'Editar' }}
+        </button>
+      </div>
+      <div class="border mb-6"></div>
+
+      <!-- Modo de visualización (solo lectura) -->
+      <div *ngIf="!editMode" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <!-- Grupo 1: Información Personal -->
+        <div class="col-span-full mb-6">
+          <h3 class="text-lg font-semibold text-purple-700 mb-4 flex items-center gap-2">
+            <i class="lucide lucide-user-circle text-xl"></i>
+            Información Personal
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-purple-50 rounded-lg">
+                  <i class="lucide lucide-id-card text-purple-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Nombre completo</p>
+                  <p class="font-medium text-gray-900">{{ usuarioForm.get('names')?.value }}</p>
+                </div>
+              </div>
+            </div>
+      
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-purple-50 rounded-lg">
+                  <i class="lucide lucide-fingerprint text-purple-600 text-2xl"></i>
+                </div>
+               
+               
+                  <div class="hidden md:block"></div> <!-- Espacio vacío para mantener el diseño en pantallas más grandes -->
+                
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Identificación</p>
+                  <p class="font-medium text-gray-900">
+                    {{ getIdentificationTypeName(usuarioForm.get('identificationDocumentId')?.value )}}  
+                    <span class="text-gray-600">{{ usuarioForm.get('identification')?.value || 'Sin especificar' }}</span>
+                  </p>
+                </div>
+                </div>  
+              </div>
+            </div>
           </div>
-          
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-badge-check text-purple-500 text-2xl"></i>
-            <p class="text-gray-700">
-                <strong>Tipo de Identificación:</strong> 
-                {{ getIdentificationTypeName(usuarioForm.get('identificationDocumentId')?.value) }}
-            </p>
-        </div>
-        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-          <i class="lucide lucide-user text-gray-600 text-2xl"></i>
-          <p class="text-gray-700"><strong>Identificación:</strong> {{ usuarioForm.get('identification')?.value || 'No registrado'}}</p>
-        </div>
         
-
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-map-pin text-blue-500 text-2xl"></i>
-            <p class="text-gray-700"><strong>Dirección:</strong> {{ usuarioForm.get('address')?.value }}</p>
+      
+        <!-- Grupo 2: Datos de Contacto -->
+        <div class="col-span-full mb-6">
+          <h3 class="text-lg font-semibold text-purple-700 mb-4 flex items-center gap-2">
+            <i class="lucide lucide-contact-round text-xl"></i>
+            Datos de Contacto
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-blue-50 rounded-lg">
+                  <i class="lucide lucide-map-pin text-blue-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Ubicación</p>
+                  <p class="font-medium text-gray-900">{{ usuarioForm.get('address')?.value }}</p>
+                  <p class="text-sm text-gray-500 mt-1">{{ usuarioMunicipioNombre }}</p>
+                </div>
+              </div>
+            </div>
+      
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-green-50 rounded-lg">
+                  <i class="lucide lucide-smartphone text-green-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Teléfono</p>
+                  <p class="font-medium text-gray-900">{{ usuarioForm.get('phone')?.value || 'No registrado' }}</p>
+                </div>
+              </div>
+            </div>
+      
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-red-50 rounded-lg">
+                  <i class="lucide lucide-at-sign text-red-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Correo electrónico</p>
+                  <p class="font-medium text-gray-900 break-all">{{ usuarioForm.get('email')?.value }}</p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-mail text-red-500 text-2xl"></i>
-            <p class="text-gray-700"><strong>Email:</strong> {{ usuarioForm.get('email')?.value }}</p>
-          </div>
-
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-phone text-green-500 text-2xl"></i>
-            <p class="text-gray-700"><strong>Teléfono:</strong> {{ usuarioForm.get('phone')?.value }}</p>
-          </div>
-
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-building text-yellow-500 text-2xl"></i>
-            <p class="text-gray-700"><strong>Razón Social:</strong> {{ usuarioForm.get('company')?.value || 'No registrado' }}</p>
-          </div>
-
-          <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex items-center space-x-4">
-            <i class="lucide lucide-user text-gray-600 text-2xl"></i>
-            <p class="text-gray-700"><strong>Nombre Comercial:</strong> {{ usuarioForm.get('tradeName')?.value || 'No registrado'}}</p>
+        </div>
+      
+        <!-- Grupo 3: Información Empresarial -->
+        <div class="col-span-full">
+          <h3 class="text-lg font-semibold text-purple-700 mb-4 flex items-center gap-2">
+            <i class="lucide lucide-building2 text-xl"></i>
+            Datos Comerciales
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-amber-50 rounded-lg">
+                  <i class="lucide lucide-banknote text-amber-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Razón Social</p>
+                  <p class="font-medium text-gray-900">{{ usuarioForm.get('company')?.value || 'No registrada' }}</p>
+                </div>
+              </div>
+            </div>
+      
+            <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-purple-200 transition-all">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-cyan-50 rounded-lg">
+                  <i class="lucide lucide-store text-cyan-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Nombre Comercial</p>
+                  <p class="font-medium text-gray-900">{{ usuarioForm.get('tradeName')?.value || 'No registrado'}}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      
+
+      <!-- Modo de edición (formulario editable) -->
+      <form *ngIf="editMode" [formGroup]="usuarioForm" (ngSubmit)="actualizarUsuario()" class="grid grid-cols-3 gap-y-8 gap-x-12">
+        <!-- Nombre -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Nombre</label>
+          <input formControlName="names" class="p-2  rounded-md focus:ring focus:ring-purple-300">
+        </div>
+
+        <!-- Tipo de Identificación -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Tipo de Identificación</label>
+          <select formControlName="identificationDocumentId" class="p-2  rounded-md">
+            <option value="1">Registro civil</option>
+            <option value="2">Tarjeta de identidad</option>
+            <option value="3">Cédula de ciudadanía</option>
+            <option value="4">Tarjeta de extranjería</option>
+            <option value="5">Cédula de extranjería</option>
+            <option value="6">NIT</option>
+            <option value="7">Pasaporte</option>
+            <option value="8">Documento de identificación extranjero</option>
+            <option value="9">PEP</option>
+            <option value="10">NIT otro país</option>
+            <option value="11">NUIP</option>
+          </select>
+        </div>
+
+        <!-- Identificación -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-900 font-semibold">Identificación</label>
+          <input formControlName="identification" class="p-2 rounded-md" readonly>
+
+        </div>
+
+        <!-- Dirección -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Dirección</label>
+          <input formControlName="address" class="p-2  rounded-md">
+        </div>
+
+        <!-- Email -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Email</label>
+          <input formControlName="email" type="email" class="p-2  rounded-md">
+        </div>
+
+        <!-- Teléfono -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Teléfono</label>
+          <input formControlName="phone" class="p-2  rounded-md">
+        </div>
+
+        <!-- Razón Social -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Razón Social</label>
+          <input formControlName="company" class="p-2  rounded-md">
+        </div>
+
+        <!-- Nombre Comercial -->
+        <div class="bg-gray-50 p-6 rounded-xl shadow-sm flex flex-col space-y-2">
+          <label class="text-gray-600 font-semibold">Nombre Comercial</label>
+          <input formControlName="tradeName" class="p-2  rounded-md">
+        </div>
+        <div class="bg-gray-50 p-6 rounded-xl  flex flex-col space-y-2">
+          <label for="municipalityId" class="block text-gray-700 font-semibold mb-2">
+            Municipio
+          </label>
+          
+          <select 
+            formControlName="municipalityId"
+            [ngClass]="{'border-red-500': !usuarioForm.controls['municipalityId'].valid && usuarioForm.controls['municipalityId'].touched}"
+            class=" border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option *ngFor="let municipio of municipios" [value]="municipio.id">
+              {{ municipio.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Botón para actualizar -->
+        <div class="col-span-3 flex justify-end mt-6">
+          <button type="submit" 
+              class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg">
+              Guardar Cambios
+          </button>
+        </div>
+      </form>
     </div>
+    <div class="flex justify-end items-end mt-20">
+      <button
+        (click)="suspenderCuenta(usuarioForm.value.id)"
+        class="relative bg-red-600 text-white font-semibold py-3 px-8 rounded-xl hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105 active:scale-95 overflow-hidden group"
+      >
+        <!-- Texto del botón -->
+        <span class="relative z-10 flex items-center space-x-2">
+          <span>Suspender Cuenta</span>
+          <!-- Icono de advertencia (siempre visible) -->
+          <span class="text-xl">⚠️</span>
+        </span>
+    
+        <!-- Efecto de onda al hacer clic -->
+        <span class="absolute inset-0 bg-white opacity-0 group-active:opacity-30 group-active:animate-ripple"></span>
+    
+        <!-- Borde animado al hacer hover -->
+        <span class="absolute inset-0 border-2 border-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+      </button>
+    </div>
+  </div>
+  
 </div>

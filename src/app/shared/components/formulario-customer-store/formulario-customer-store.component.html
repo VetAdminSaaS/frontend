@@ -1,70 +1,87 @@
-<!-- Contenedor principal del formulario -->
 <div class="max-w-6xl mx-auto p-6">
-  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Carrito de Compras</h2>
-  <div class="border mt-1 mb-7"></div>
-  <!-- Formulario Reactivo -->
+  <div class="mb-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
+      <svg class="w-8 h-8 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+      </svg>
+      Carrito de Compras
+    </h2>
+    <div class="h-1 w-20 bg-blue-600 rounded"></div>
+  </div>
+
   <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
-    
-    <!-- Sección de inputs en formato de rejilla (grid) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    
-      <!-- Tipo de Persona -->
-        
-      <div>
-        <label  class="block uppercase text-blueGray-600 text-sm font-bold mb-2">
-          Rango de numeración <span class="text-red-500">*</span>
-        </label>
-        <select
-  class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-  formControlName="numbering_range_id"
-  (change)="onNumberingRangeChange($event)"
-  [ngClass]="{ 'border-red-500': !customerForm.controls['numbering_range_id'].valid && customerForm.controls['numbering_range_id'].touched }">
-  
-  <option value="" disabled>Seleccione un rango de numeración</option>
-  <option *ngFor="let rangoNumerico of rangosNumericos" [value]="rangoNumerico.id">
-    {{ rangoNumerico.document }} | {{ rangoNumerico.prefix }} ({{ rangoNumerico.from }} - {{ rangoNumerico.to }})
-  </option>
-</select>
-
-
-
-      
-        <div
-          *ngIf="!customerForm.controls['numbering_range_id'].valid && customerForm.controls['numbering_range_id'].touched"
-          class="text-red-500 text-xs mt-1">
-          Por favor, seleccione un rango de numeración.
+    <div class="bg-blue-50 p-6 rounded-lg">
+      <h3 class="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+          <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm6 4a1 1 0 10-2 0v1H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V9z" clip-rule="evenodd"></path>
+        </svg>
+        Configuración de Numeración
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Rango de numeración <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <select 
+              class="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none appearance-none bg-white"
+              formControlName="numbering_range_id"
+              (change)="onNumberingRangeChange($event)">
+              <option value="" disabled>Seleccione un rango</option>
+              <option *ngFor="let rangoNumerico of rangosNumericos" [value]="rangoNumerico.id">
+                {{ rangoNumerico.document }} | {{ rangoNumerico.prefix }} ({{ rangoNumerico.from }} - {{ rangoNumerico.to }})
+              </option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+          <div *ngIf="!customerForm.controls['numbering_range_id'].valid && customerForm.controls['numbering_range_id'].touched" 
+               class="text-red-500 text-sm mt-2 flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            Seleccione un rango de numeración
+          </div>
         </div>
       </div>
-      
+    </div>
+    <div class="p-6 border rounded-lg mt-4">  
+      <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+        <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+        </svg>
+        Información del Cliente
+      </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"> 
       
       
             <div>
         <label for="legal_organization_id" class="block text-gray-700 font-semibold mb-2">
-          Tipo de Persona
+          Tipo de Persona:
         </label>
         <select 
           formControlName="legal_organization_id" 
           id="legal_organization_id" 
           
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
           [disabled]="false" 
           >
           <option value=2>Persona Natural</option>
           <option value=1>Persona Jurídica</option>
         </select>
       </div>
-      
-      <!-- Identificación -->
       <div>
         <label for="identification_document_id" class="block text-gray-700 font-semibold mb-2">
-          ID Documento de Identificación
+          Tipo de Documento de Identificación:
         </label>
         <select 
           formControlName="identification_document_id" 
           type="text" 
           id="identification_document_id" 
           placeholder="ID Documento de Identificación" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
         <option value="1">Registro civil</option>
         <option value="2">Tarjeta de identidad</option>
@@ -78,147 +95,122 @@
         <option value="10">NIT otro país</option>
         <option value="11">NUIP</option>
         </select>
-
-        
       </div>
       <div>
         <label for="identification" class="block text-gray-700 font-semibold mb-2">
-          Identificación
+          Nro° de Identificación:
         </label>
         <input 
           formControlName="identification" 
           type="text" 
           id="identification" 
           placeholder="Identificación" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
   
       <div *ngIf="customerForm.get('identification_document_id')?.value === '6'">
         <label for="dv" class="block text-gray-700 font-semibold mb-2">
-          Dígito de Verificación (DV)
+          Dígito de Verificación (DV):
         </label>
         <input 
           formControlName="dv" 
           type="text" 
           id="dv" 
           placeholder="DV" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-  
-      <!-- Campo Compañía para Personas Jurídicas -->
       <div *ngIf="customerForm.get('legal_organization_id')?.value === 1">
         <label for="company" class="block text-gray-700 font-semibold mb-2">
-          Compañía
+          Compañía:
         </label>
         <input 
           formControlName="company" 
           type="text" 
           id="company" 
           placeholder="Compañía" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-    
-      <!-- Campo Nombre Comercial para Personas Jurídicas -->
       <div *ngIf="customerForm.get('legal_organization_id')?.value === 1">
         <label for="trade_name" class="block text-gray-700 font-semibold mb-2">
-          Nombre Comercial
+          Nombre Comercial:
         </label>
         <input 
           formControlName="trade_name" 
           type="text" 
           id="trade_name" 
           placeholder="Nombre Comercial" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-  
-      <!-- Nombres (Solo para persona natural) -->
       <div *ngIf="customerForm.get('legal_organization_id')?.value ===2">
         <label for="names" class="block text-gray-700 font-semibold mb-2">
-          Nombres
+          Nombres y Apellidos:
         </label>
         <input 
           formControlName="names" 
           type="text" 
           id="names" 
           placeholder="Nombres" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-  
-      <!-- Dirección -->
       <div>
         <label for="address" class="block text-gray-700 font-semibold mb-2">
-          Dirección
+          Dirección:
         </label>
         <input 
           formControlName="address" 
           type="text" 
           id="address" 
           placeholder="Dirección" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-  
-      <!-- Email -->
       <div>
         <label for="email" class="block text-gray-700 font-semibold mb-2">
-          Email
+          Email:
         </label>
         <input 
           formControlName="email" 
           type="email" 
           id="email" 
           placeholder="Email" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-  
-      <!-- Teléfono -->
       <div>
         <label for="phone" class="block text-gray-700 font-semibold mb-2">
-          Teléfono
+          Teléfono:
         </label>
         <input 
           formControlName="phone" 
           type="text" 
           id="phone" 
           placeholder="Teléfono" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
       </div>
-  
-      <!-- ID Organización Legal -->
-      
-  
-      <!-- ID Tributo -->
       <div>
         <label for="tribute_id" class="block text-gray-700 font-semibold mb-2">
-          ID Tributo
+          Tipo de Tributo:
         </label>
         <select 
           formControlName="tribute_id" 
           type="text" 
           id="tribute_id" 
           placeholder="ID Tributo" 
-          class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-gray-300 rounded-lg w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
         >
         <option value="18">IVA</option>
         <option value="21">No aplica*</option>
         </select>
-
       </div>
-  
-  
-      
-  
-      <!-- ID Municipio -->
       <div>
         <label for="municipality_id" class="block text-gray-700 font-semibold mb-2">
-          Municipio
+          Municipio:
         </label>
         
         <select 
@@ -230,34 +222,29 @@
             {{ municipio.name }}
           </option>
         </select>
-      
-   
       </div>
+    </div> 
+  </div>
+    <div class="border mt-5 mb-5"></div>
+    <div class="p-6 border bg-gray-50 rounded-lg">
+      <div class="text-xl font-medium font-sans">Forma de Entrega</div>
       
-    
-  
-    </div> <!-- Cierre grid -->
 
-    <!-- Botón de envío -->
+
+    </div>
     <div class="flex items-center justify-end mt-6">
       <div class="flex flex-col items-center justify-end mt-6">
         <button 
         type="button"
         (click)="confirmCustomer()"
-        class="text-white font-bold py-4 px-8 rounded focus:outline-none focus:shadow-outline transition duration-200
+        class="text-white font-bold py-4 px-8 rounded-lg focus:outline-none focus:shadow-outline transition duration-200
                bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
-        Enviar
+        Finalizar Compra
       </button>
-  
-        
-        <!-- Mensaje de advertencia -->
         <p *ngIf="isCartNotEmpty" class="text-red-500 text-sm mt-2">
           ⚠ Debes agregar al menos un producto al carrito.
         </p>
       </div>
-      
     </div>
-    
-
   </form>
 </div>

@@ -11,13 +11,10 @@ export class FacturaService {
     private baseURL = `${environment.apiUrl}/v1/bills`;  // URL base de la API de facturas
 
     constructor(private http: HttpClient, private storageService: StorageService) {}
-
-    // Método para obtener las facturas con autenticación
     getFacturas(page: number, limit: number, filters: string = ''): Observable<any> {
-      // Construcción segura de la URL
       let url = `${this.baseURL}?page=${page}&limit=${limit}`;
       
-      if (filters.trim()) { // Solo añadir filtros si existen
+      if (filters.trim()) { 
           url += `&${filters}`;
       }
   

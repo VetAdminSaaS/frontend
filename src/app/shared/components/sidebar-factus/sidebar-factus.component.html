@@ -1,97 +1,311 @@
-<div class="w-full md:w-64 lg:w-80 bg-white text-black shadow-md border-r border-gray-200 h-screen flex flex-col p-6 space-y-6">
-  <!-- Logo -->
-  <div class="flex items-center space-x-3 mb-8">
-      <img src="https://www.exact.com.pe/assets/uploads/noticias/8-beneficios-del-sistema-de-facturacion-online.jpg" 
-           alt="Logo" class="w-10 h-10 rounded-full border-2 border-gray-300">
-      <h2 class="text-xl font-semibold text-gray-800">E-FacturaPro</h2>
+<!-- Menú lateral -->
+<div class="w-full md:w-64 lg:w-80  bg-white text-black shadow-lg border-r border-gray-300 h-screen flex flex-col p-4 fixed md:relative transform transition-transform duration-300 ease-in-out z-50 "
+     [class.-translate-x-full]="!isSidebarOpen" [class.translate-x-0]="isSidebarOpen">
+  
+  <!-- Botón de hamburguesa para móviles -->
+  <div class="md:hidden flex items-center justify-between mb-6 ">
+    <button (click)="toggleSidebar()" class="text-gray-700">
+      <span class="material-icons">menu</span>
+    </button>
+    <img src="https://scontent.ftru1-1.fna.fbcdn.net/v/t39.30808-6/293063487_463186372481277_8679585696335773349_n.png?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHSXal0v_sLJwz2C4mDmSeaKAIn2Hj6weEoAifYePrB4UeM8N0iMjA2iaB-m02Q1oaj-x5Eg2rfALUc63DmUJuY&_nc_ohc=0Rs1zRSFN-oQ7kNvgE_LKeX&_nc_oc=AdiaJpT5EBI6tryb3YKYNeW7NT1kAPBaKRLhSKozLo1DfWwQwcD2aLedtrL813Q_utQ&_nc_zt=23&_nc_ht=scontent.ftru1-1.fna&_nc_gid=AfwBXtcmsXQ3KtCF7yNaPge&oh=00_AYBdDhBT_Vk96AWljNiJq8d0lqlujQiILfjKmVAKx2REnA&oe=67CAD4B9"
+         alt="Logo" class="w-12 h-12 rounded-full border-2 border-gray-400">
   </div>
 
-  <!-- Menu -->
-  <ul class="space-y-2 flex-1 overflow-y-auto">
-      <!-- Inicio -->
-      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
-          <a routerLink="/administrador/dashboard" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-              <span class="material-icons">home</span>
-              <span>Dashboard</span>
-          </a>
-      </li>
-
-      <!-- Usuarios -->
-      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
-          <a routerLink="/administrador/usuarios/list" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-              <span class="material-icons">people</span>
-              <span>Usuarios</span>
-          </a>
-      </li>
-
-      <!-- Compras -->
-      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
-          <a routerLink="/administrador/purchases/list" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-              <span class="material-icons">shopping_cart</span>
-              <span>Compras</span>
-          </a>
-      </li>
-
-      <!-- Reportes -->
-      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
-          <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-              <span class="material-icons">assessment</span>
-              <span>Reportes</span>
-          </a>
-      </li>
-
-      <!-- Productos (Dropdown) -->
-      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out group">
-          <div class="flex items-center justify-between cursor-pointer">
-              <div class="flex items-center space-x-3">
-                  <span class="material-icons">inventory_2</span>
-                  <span>Productos</span>
-              </div>
-              <span class="material-icons transform transition-transform duration-200 group-hover:rotate-90">expand_more</span>
-          </div>
-          <!-- Dropdown Content -->
-          <ul class="hidden group-hover:block ml-6 mt-2 space-y-2">
-              <li class="hover:bg-gray-100 p-2 rounded-lg">
-                  <a href="#" [routerLink]="['/administrador/products/create']" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-                      <span class="material-icons text-sm">add_circle</span>
-                      <span>Crear Producto</span>
-                  </a>
-              </li>
-          </ul>
-      </li>
-
-      <!-- Facturas (Dropdown) -->
-      <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out group">
-          <div class="flex items-center justify-between cursor-pointer">
-              <div class="flex items-center space-x-3">
-                  <span class="material-icons">receipt_long</span>
-                  <span>Facturas</span>
-              </div>
-              <span class="material-icons transform transition-transform duration-200 group-hover:rotate-90">expand_more</span>
-          </div>
-          <!-- Submenú -->
-          <ul class="hidden group-hover:block ml-6 mt-2 space-y-2">
-              <li class="hover:bg-gray-100 p-2 rounded-lg">
-                  <a href="#" [routerLink]="['/administrador/invoices/create']" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-                      <span class="material-icons text-sm">add_circle</span>
-                      <span>Crear Factura</span>
-                  </a>
-              </li>
-              <li class="hover:bg-gray-100 p-2 rounded-lg">
-                  <a href="#" [routerLink]="['/administrador/invoices/view']" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
-                      <span class="material-icons text-sm">list_alt</span>
-                      <span>Ver Facturas</span>
-                  </a>
-              </li>
-          </ul>
-      </li>
-  </ul>
-
-  <!-- Footer: Cerrar sesión (fijo en la parte inferior) -->
-  <div class="border-t pt-4">
-      <a href="#" (click)="logout()" class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out text-gray-600 hover:text-red-600">
-          <span class="material-icons">logout</span>
-          <span>Cerrar Sesión</span>
-      </a>
-  </div>
+  <!-- Logo y nombre -->
+  <div class="flex items-center space-x-3 mb-6 p-3 border-b border-gray-200">
+    <img src="https://i.postimg.cc/PrxFKhTg/Dise-o-sin-t-tulo-26.png"
+         alt="Logo" class="w-12 h-12 rounded-full border-2 border-gray-400">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-800">VetAdmin PRO</h2>
+        <span class="text-xs font-semibold text-gray-600">Software De Gestión Veterinaria</span>
+    </div>
 </div>
+
+    <!-- Menú -->
+    <ul class="flex-1 overflow-y-auto space-y-1">
+      <!-- Enlaces directos -->
+      <li>
+        <a routerLink="/administrador/dashboard"
+          class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+          <span class="material-icons">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <div class="group">
+          <div class="flex items-center justify-between p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer">
+            <div class="flex items-center space-x-3">
+              <span class="material-icons">account_circle</span>
+              <span>Usuarios</span>
+            </div>
+            <span class="material-icons transition-transform group-hover:rotate-180">expand_more</span>
+          </div>
+          <ul class="hidden group-hover:block pl-6 space-y-1 mt-1">
+            <li>
+              <a routerLink="/administrador/usuarios/list"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">people</span>
+                <span>Clientes</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/empleados"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">assignment_ind</span>
+                <span>Empleados</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/apoderados"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">people</span>
+                <span>Apoderados</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+  
+       <div class="border-t border-gray-200 my-2"></div>
+  
+    
+  
+      <li>
+        <a routerLink="/administrador/servicios/list"
+          class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+          <span class="material-icons">medical_services</span>
+          <span>Servicios Veterinarios</span>
+        </a>
+      </li>
+  
+      <li>
+        <a routerLink="/administrador/sucursales/view"
+          class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+          <span class="material-icons">local_hospital</span>
+          <span>Sucursales</span>
+        </a>
+      </li>
+      <li>
+      
+      </li>
+    
+      <li>
+        <a routerLink="/administrador/asistencia"
+          class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+          <span class="material-icons">access_time</span>
+          <span>Asistencia</span>
+        </a>
+      </li>
+  
+      <div class="border-t border-gray-200 my-2"></div>
+  
+      <!-- Dropdown: Citas -->
+      <li>
+        <div class="group">
+          <div class="flex items-center justify-between p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer">
+            <div class="flex items-center space-x-3">
+              <span class="material-icons">event</span>
+              <span>Citas</span>
+            </div>
+            <span class="material-icons transition-transform group-hover:rotate-180">expand_more</span>
+          </div>
+          <ul class="hidden group-hover:block pl-6 space-y-1 mt-1">
+            <li>
+              <a routerLink="/administrador/citas/create"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">event_available</span> Crear Cita
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/citas/calendario"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">calendar_today</span> Calendario
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/citas/historial"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">history</span> Historial
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    <div class="border-t border-gray-200 my-2"></div>
+  
+      <!-- Compras -->
+      <li>
+        <a routerLink="/administrador/purchases/list"
+          class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+          <span class="material-icons">shopping_cart</span>
+          <span>Compras</span>
+        </a>
+      </li>
+      <li>
+        <div class="group">
+          <div class="flex items-center justify-between p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer">
+            <div class="flex items-center space-x-3">
+              <span class="material-icons">assignment</span>
+              <span>Inventario</span>
+            </div>
+            <span class="material-icons transition-transform group-hover:rotate-180">expand_more</span>
+          </div>
+          <ul class="hidden group-hover:block pl-6 space-y-1 mt-1">
+            <li>
+              <a routerLink="/administrador/products/view"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">local_mall</span>
+                <span>Productos</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/pedidos"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">storefront</span>
+                <span>Pedidos</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/productos/stock"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">add_shopping_cart</span>
+                <span>Stock de productos</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/envios"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">local_shipping</span>
+                <span>Envíos</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/historial-entregas"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">assignment_turned_in</span>
+                <span>Historial de entregas</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/programacion-entregas"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">event_available</span>
+                <span>Entregas programadas</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/devoluciones"
+                class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+                <span class="material-icons">undo</span>
+                <span>Devoluciones</span>
+              </a>
+            </li>
+
+
+
+
+            
+
+          </ul>
+        </div>
+      </li>
+    <div class="border-t border-gray-200 my-2"></div>
+  
+      <!-- Reportes -->
+      <li>
+        <a routerLink="/administrador/reportes"
+          class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 transition-all">
+          <span class="material-icons">assessment</span>
+          <span>Reportes</span>
+        </a>
+      </li>
+  
+      <!-- Dropdown: Productos -->
+      <li>
+        <div class="group">
+          <div class="flex items-center justify-between p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer">
+            <div class="flex items-center space-x-3">
+              <span class="material-icons">inventory_2</span>
+              <span>Productos</span>
+            </div>
+            <span class="material-icons transition-transform group-hover:rotate-180">expand_more</span>
+          </div>
+          <ul class="hidden group-hover:block pl-6 space-y-1 mt-1">
+            <li>
+              <a routerLink="/administrador/products/create"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">add_circle</span> Crear Producto
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/products/view"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">visibility
+                </span> Ver Productos
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/categorias/view"
+                class="flex items-center gap-2 p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all"
+                aria-label="Ver categorías">
+                <span class="material-icons text-sm">category</span>
+                <span>Categorías</span>
+              </a>
+            </li>
+            
+          </ul>
+        </div>
+      </li>
+  
+      <!-- Dropdown: Facturas -->
+      <li>
+        <div class="group">
+          <div class="flex items-center justify-between p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer">
+            <div class="flex items-center space-x-3">
+              <span class="material-icons">receipt_long</span>
+              <span>Facturas</span>
+            </div>
+            <span class="material-icons transition-transform group-hover:rotate-180">expand_more</span>
+          </div>
+          <ul class="hidden group-hover:block pl-6 space-y-1 mt-1">
+            <li>
+              <a routerLink="/administrador/invoices/create"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">add_circle</span> Crear Factura
+              </a>
+            </li>
+            <li>
+              <a routerLink="/administrador/invoices/view"
+                class="block p-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-all">
+                <span class="material-icons text-sm">list_alt</span> Ver Facturas
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <div class="border-t border-gray-200 my-2"></div>
+    <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+        <a routerLink="/settings" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+          <span class="material-icons">settings</span>
+          <span>Configuración</span>
+        </a>
+     </li>
+     <li class="hover:bg-gray-50 p-3 rounded-lg transition-all duration-200 ease-in-out">
+      <a routerLink="/help" class="flex items-center space-x-3 text-gray-600 hover:text-indigo-600">
+        <span class="material-icons">help_outline</span>
+        <span>Ayuda</span>
+      </a>
+   </li>
+    </ul>
+    
+  
+    <!-- Cerrar sesión -->
+    <div class="border-t border-gray-200 pt-4">
+      <a (click)="logout()"
+        class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer">
+        <span class="material-icons">logout</span>
+        <span>Cerrar Sesión</span>
+      </a>
+    </div>
+  </div>
+  

@@ -1,0 +1,460 @@
+<div class="flex h-screen bg-gradient-to-br from-gray-50 to-indigo-50 font-barlow"style="font-family: 'Barlow', sans-serif;">
+  <!-- Sidebar -->
+  <app-sidebar-factus></app-sidebar-factus>
+
+  <div class="flex flex-col w-full overflow-auto">
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800 flex items-center">
+            <span class="material-icons mr-3 text-indigo-600 bg-indigo-100 p-2 rounded-full">supervisor_account</span>
+            Gestión de Apoderados
+          </h1>
+          <p class="text-gray-500 ml-14">Administra los apoderados de los estudiantes</p>
+        </div>
+        <button *ngIf="!isEditing"
+        class="btn-primary flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg px-5 py-3 shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
+        (click)="mostrarFormulario()">
+        <span class="material-icons text-white text-lg">person_add</span>
+        <span class="text-base">Nuevo Apoderado</span>
+        </button>
+
+      </div>
+
+      <!-- Formulario de Apoderado - Diseño mejorado -->
+      <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 mb-8 transition-all duration-300" 
+      *ngIf="showForm"
+      [class]="{'scale-[0.98]': !showForm, 'scale-100': showForm}">
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center">
+          <span class="material-icons mr-3 p-2 rounded-full text-white"
+                [ngClass]="{
+                  'bg-indigo-500': !isEditing && !isView,
+                  'bg-purple-500': isEditing,
+                  'bg-green-500': isView
+                }">
+            {{ isView ? 'visibility' : (isEditing ? 'edit' : 'person_add') }}
+          </span>
+          <h2 class="text-2xl font-bold text-gray-800">
+            {{ isView ? 'Visualizar Apoderado' : (isEditing ? 'Editar Apoderado' : 'Registrar Nuevo Apoderado') }}
+          </h2>
+        </div>
+        <button (click)="cancelarEdicion()" class="text-gray-500 hover:text-gray-700 transition-colors">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      
+   
+   <form [formGroup]="apoderadoForm" (ngSubmit)="crearApoderado()" class="space-y-6">
+
+     <div class="border-b border-gray-200">
+       <nav class="-mb-px flex space-x-8">
+         <button type="button" 
+                 (click)="setActiveTab('personal')"
+                 [class]="{'border-indigo-600 text-indigo-600': activeTab === 'personal', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'personal'}"
+                 class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+           <span class="material-icons align-middle mr-1" 
+                 [class]="{'text-indigo-600': activeTab === 'personal', 'text-gray-400': activeTab !== 'personal'}">
+             person
+           </span>
+           Información Personal
+         </button>
+         <button type="button" 
+                 (click)="setActiveTab('contacto')"
+                 [class]="{'border-indigo-600 text-indigo-600': activeTab === 'contacto', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'contacto'}"
+                 class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+           <span class="material-icons align-middle mr-1" 
+                 [class]="{'text-indigo-600': activeTab === 'contacto', 'text-gray-400': activeTab !== 'contacto'}">
+             contact_mail
+           </span>
+           Información de Contacto
+         </button>
+         <button type="button" 
+                 (click)="setActiveTab('ubicacion')"
+                 [class]="{'border-indigo-600 text-indigo-600': activeTab === 'ubicacion', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'ubicacion'}"
+                 class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+           <span class="material-icons align-middle mr-1" 
+                 [class]="{'text-indigo-600': activeTab === 'ubicacion', 'text-gray-400': activeTab !== 'ubicacion'}">
+             location_on
+           </span>
+           Ubicación
+         </button>
+       </nav>
+     </div>
+ 
+     <!-- Contenido de las pestañas -->
+     <div [ngSwitch]="activeTab" class="pt-4">
+       <!-- Pestaña de Información Personal -->
+       <div *ngSwitchCase="'personal'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+         <!-- Columna Izquierda -->
+         <div class="space-y-5">
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Documento <span class="text-red-500">*</span></label>
+             <div class="relative">
+               <select formControlName="tipoDocumentoIdentidad" 
+                       class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                 <option value="" disabled selected>Seleccione tipo</option>
+                 <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{tipo}}</option>
+               </select>
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">badge</span>
+             </div>
+           </div>
+           
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Número de Documento <span class="text-red-500">*</span></label>
+             <div class="relative">
+               <input formControlName="numeroIdentificacion" 
+                      placeholder="Ej: 12345678" 
+                      class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">numbers</span>
+             </div>
+           </div>
+           
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-2">Género <span class="text-red-500">*</span></label>
+             <div class="grid grid-cols-3 gap-3">
+               <label *ngFor="let genero of generos" 
+                      class="flex flex-col items-center p-3 border-2 rounded-lg cursor-pointer transition-colors"
+                      [class]="{'border-indigo-500 bg-indigo-50': apoderadoForm.get('genero')?.value === genero, 'border-gray-200 hover:border-gray-300': apoderadoForm.get('genero')?.value !== genero}">
+                 <input type="radio" formControlName="genero" [value]="genero" class="hidden">
+                 <span class="material-icons text-2xl mb-1" 
+                       [class]="{'text-indigo-600': apoderadoForm.get('genero')?.value === genero, 'text-gray-400': apoderadoForm.get('genero')?.value !== genero}">
+                   {{ genero === 'Masculino' ? 'male' : genero === 'Femenino' ? 'female' : 'transgender' }}
+                 </span>
+                 <span class="text-sm">{{genero}}</span>
+               </label>
+             </div>
+           </div>
+         </div>
+         
+         <!-- Columna Derecha -->
+         <div class="space-y-5">
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Nombres <span class="text-red-500">*</span></label>
+             <div class="relative">
+               <input formControlName="nombre" 
+                      placeholder="Nombres completos" 
+                      class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">person</span>
+             </div>
+           </div>
+           
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Apellidos <span class="text-red-500">*</span></label>
+             <div class="relative">
+               <input formControlName="apellido" 
+                      placeholder="Apellidos completos" 
+                      class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">people</span>
+             </div>
+           </div>
+           
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
+             <div class="relative">
+               <input type="date" formControlName="fechaNacimiento" 
+                      class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">calendar_today</span>
+             </div>
+           </div>
+         </div>
+       </div>
+ 
+       <!-- Pestaña de Información de Contacto -->
+       <div *ngSwitchCase="'contacto'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+         <div class="space-y-5">
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico <span class="text-red-500">*</span></label>
+             <div class="relative">
+               <input formControlName="email" type="email" 
+                      placeholder="ejemplo@correo.com" 
+                      class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">email</span>
+             </div>
+           </div>
+           
+           <div class="form-group">
+             <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono/Celular <span class="text-red-500">*</span></label>
+             <div class="relative">
+               <input formControlName="telefono" 
+                      placeholder="Ej: 987654321" 
+                      class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+               <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">call</span>
+             </div>
+           </div>
+         </div>
+         
+         <div class="form-group">
+           <label class="block text-sm font-medium text-gray-700 mb-1">Dirección <span class="text-red-500">*</span></label>
+           <div class="relative">
+             <textarea formControlName="direccion" 
+                       placeholder="Dirección completa" 
+                       rows="4"
+                       class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></textarea>
+             <span class="material-icons absolute left-3 top-3 text-gray-500">home</span>
+           </div>
+         </div>
+       </div>
+ 
+       <!-- Pestaña de Ubicación -->
+       <div *ngSwitchCase="'ubicacion'" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+         <div class="form-group">
+           <label class="block text-sm font-medium text-gray-700 mb-1">Departamento</label>
+           <div class="relative">
+             <input formControlName="departamento" type="text" 
+                    placeholder="Ingrese departamento"
+                    class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+             <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">location_city</span>
+           </div>
+         </div>
+         
+         <div class="form-group">
+           <label class="block text-sm font-medium text-gray-700 mb-1">Provincia</label>
+           <div class="relative">
+             <input formControlName="provincia" type="text" 
+                    placeholder="Ingrese provincia"
+                    class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+             <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">map</span>
+           </div>
+         </div>
+         
+         <div class="form-group">
+           <label class="block text-sm font-medium text-gray-700 mb-1">Distrito</label>
+           <div class="relative">
+             <input formControlName="distrito" type="text" 
+                    placeholder="Ingrese distrito"
+                    class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+             <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">place</span>
+           </div>
+         </div>
+       </div>
+     </div>
+ 
+     <div class="flex justify-between pt-6 border-t border-gray-200">
+       <div>
+         <button *ngIf="activeTab !== 'personal'" 
+                 type="button" 
+                 (click)="setActiveTab(activeTab === 'contacto' ? 'personal' : 'contacto')"
+                 class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+           <span class="material-icons mr-2">arrow_back</span>
+           Anterior
+         </button>
+       </div>
+       
+       <div class="flex space-x-3">
+         <button *ngIf="activeTab !== 'ubicacion'" 
+                 type="button" 
+                 (click)="setActiveTab(activeTab === 'personal' ? 'contacto' : 'ubicacion')"
+                 class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+           Siguiente
+           <span class="material-icons ml-2">arrow_forward</span>
+         </button>
+         
+         <button *ngIf="activeTab === 'ubicacion'" 
+                 type="submit" 
+                 class="flex items-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition-colors">
+           <span class="material-icons mr-2">{{ isEditing ? 'save' : 'add' }}</span>
+           {{ isEditing ? 'Actualizar Apoderado' : 'Registrar Apoderado' }}
+         </button>
+       </div>
+     </div>
+   </form>
+ </div>
+
+      <!-- Tabla de Apoderados - Diseño mejorado -->
+      <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+              <span class="material-icons mr-3 bg-indigo-100 text-indigo-600 p-2 rounded-full">list_alt</span>
+              Lista de Apoderados
+            </h2>
+            <p class="text-gray-500 ml-14">Total de apoderados: {{apoderados.length}}</p>
+          </div>
+          
+          <div class="relative w-full md:w-80">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="material-icons text-gray-400">search</span>
+            </div>
+            <input type="text" placeholder="Buscar apoderado..." 
+                   [(ngModel)]="searchTerm"
+                   (input)="filterApoderados()"
+                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Documento
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                 Nro° De Identificación
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Apoderado
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Contacto
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ubicación
+                </th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let apoderado of filteredApoderados" 
+                  class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                      <span class="material-icons text-indigo-600">badge</span>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">{{apoderado.tipoDocumentoIdentidad}}</div>
+                     
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">{{apoderado.numeroIdentificacion}}</div>
+                     
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{apoderado.nombre}} {{apoderado.apellido}}</div>
+                  <div class="flex items-center mt-1">
+                    <span class="material-icons text-sm mr-1" 
+                          [class]="{'text-blue-500': apoderado.genero === 'MASCULINO', 'text-pink-500': apoderado.genero === 'FEMENINO'}">
+                      {{ apoderado.genero === 'MASCULINO' ? 'male' : apoderado.genero === 'FEMENINO' ? 'female' : 'transgender' }}
+                    </span>
+                    <span class="text-xs px-2 py-0.5 rounded-full" 
+                          [class]="{'bg-blue-100 text-blue-800': apoderado.genero === 'MASCULINO', 'bg-pink-100 text-pink-800': apoderado.genero === 'FEMENINO'}">
+                      {{apoderado.genero}}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center text-sm text-gray-900">
+                    <span class="material-icons mr-2 text-sm text-indigo-500">mail</span>
+                    {{apoderado.email || 'No especificado'}}
+                  </div>
+                  <div class="flex items-center text-sm text-gray-500 mt-1">
+                    <span class="material-icons mr-2 text-sm text-indigo-500">call</span>
+                    {{apoderado.telefono || 'No especificado'}}
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-900">{{apoderado.direccion || 'No especificada'}}</div>
+                  <div class="text-xs text-gray-500 mt-1">
+                    <span *ngIf="apoderado.departamento">{{apoderado.departamento}}</span>
+                    <span *ngIf="apoderado.provincia"> / {{apoderado.provincia}}</span>
+                    <span *ngIf="apoderado.distrito"> / {{apoderado.distrito}}</span>
+                    <span *ngIf="!apoderado.departamento && !apoderado.provincia && !apoderado.distrito">Ubicación no especificada</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end gap-2">
+                    
+                    <!-- Botón Editar -->
+                    <button (click)="editarApoderado(apoderado)" 
+                            class="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 p-2 rounded-lg shadow-sm transition-all duration-200"
+                            title="Editar">
+                      <span class="material-icons text-base">edit</span>
+                    </button>
+                    <button (click)="confirmarSuspension(apoderado.id)"
+        class="text-yellow-600 hover:text-yellow-900 bg-yellow-50 hover:bg-yellow-100 p-2 rounded-full transition"
+        title="Suspender">
+  <span class="material-icons">block</span>
+</button>
+
+                
+                    <!-- Botón Eliminar -->
+                    <button (click)="confirmarEliminacion(apoderado.id)" 
+                            class="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 p-2 rounded-lg shadow-sm transition-all duration-200"
+                            title="Eliminar">
+                      <span class="material-icons text-base">delete</span>
+                    </button>
+                
+                    <!-- Botón Ver Detalles -->
+                    <button 
+                            (click)="verDetalles(apoderado)"
+                            class="bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 p-2 rounded-lg shadow-sm transition-all duration-200"
+                            title="Ver detalles">
+                            
+                      <span class="material-icons text-base">visibility</span>
+                    </button>
+                  </div>
+                </td>
+                
+              </tr>
+              <tr *ngIf="filteredApoderados.length === 0">
+                <td colspan="5" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center justify-center text-gray-400">
+                    <span class="material-icons text-5xl mb-3">people_alt</span>
+                    <p class="text-lg">No hay apoderados registrados</p>
+                    <p class="text-sm mt-1">Presiona el botón "Nuevo Apoderado" para agregar uno</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <div *ngIf="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full transform transition-all duration-300 scale-95">
+      
+      <!-- Título y Cerrar -->
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+          <span class="material-icons mr-2 text-red-500">warning</span>
+          {{ actionType === 'eliminar' ? 'Confirmar eliminación' : 'Confirmar suspensión' }}
+        </h3>
+        <button (click)="showDeleteModal = false" class="text-gray-400 hover:text-gray-600">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+  
+      <!-- Mensaje -->
+      <p class="text-gray-600 mb-6">
+        ¿Estás seguro que deseas 
+        <strong>{{ actionType === 'eliminar' ? 'eliminar' : 'suspender' }}</strong> 
+        este apoderado? {{ actionType === 'eliminar' ? 'Esta acción no se puede deshacer.' : 'Podrás reactivarlo más tarde.' }}
+      </p>
+  
+      <!-- Botones -->
+      <div class="flex justify-end space-x-3">
+        <button (click)="showDeleteModal = false" 
+                class="btn-secondary border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg">
+          Cancelar
+        </button>
+        <button (click)="confirmarAccion()" 
+                class="btn-primary px-4 py-2 rounded-lg flex items-center"
+                [ngClass]="{'bg-red-600 hover:bg-red-700 text-white': actionType === 'eliminar', 'bg-yellow-500 hover:bg-yellow-600 text-white': actionType === 'suspender'}">
+          <span class="material-icons mr-1">{{ actionType === 'eliminar' ? 'delete' : 'block' }}</span>
+          {{ actionType === 'eliminar' ? 'Eliminar' : 'Suspender' }}
+        </button>
+      </div>
+  
+    </div>
+  </div>
+  
+</div>

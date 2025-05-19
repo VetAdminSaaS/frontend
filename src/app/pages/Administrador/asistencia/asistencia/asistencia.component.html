@@ -1,0 +1,263 @@
+<div class="flex h-screen bg-gray-50" style="font-family: 'Barlow', sans-serif;">
+    <!-- Sidebar -->
+    <app-sidebar-factus></app-sidebar-factus>
+
+    <div class="flex flex-col w-full overflow-hidden">
+        <app-navbar></app-navbar>
+        
+        <!-- Main Content -->
+        <main class="flex-1 px-4 md:px-8 py-6 overflow-y-auto bg-gradient-to-br from-white to-blue-50/30">
+            <!-- Header Contextual -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 space-y-4 md:space-y-0">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Mi Asistencia</h1>
+                        <div class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-sm flex items-center gap-1.5">
+                            <i class="fas fa-check-circle text-sm"></i>
+                            <span>Al día</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500">Último registro: Hoy a las 08:58 AM</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center px-4 py-2 gap-2 text-sm font-medium text-gray-600 bg-white hover:bg-gray-50 rounded-lg border border-gray-200 shadow-xs transition-all">
+                        <i class="fas fa-calendar-alt text-blue-500"></i>Ver calendario
+                    </button>
+                    <div class="h-10 w-px bg-gray-200"></div>
+                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                        <i class="fas fa-clock text-blue-500"></i>
+                        <span>Tiempo acumulado: 4h 25m</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjetas Principales -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Tarjeta de Acción Principal -->
+                <div class="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="p-6 flex flex-col items-center relative">
+                        <div class="absolute top-4 right-4">
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                        <div class="w-full max-w-xs space-y-6">
+                            <div class="relative">
+                                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="w-2/3 h-full bg-blue-500"></div>
+                                </div>
+                                <div class="flex justify-between text-sm text-gray-500 mt-2">
+                                    <span>9:00 AM</span>
+                                    <span>6:00 PM</span>
+                                </div>
+                            </div>
+                            
+                            <button 
+                                (click)="openModal()"
+                                class="w-full py-5 text-lg font-bold text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl shadow-lg transform transition-all hover:scale-[1.02] relative overflow-hidden group">
+                                <div class="flex items-center justify-center gap-2">
+                                    <i class="fas fa-{{ isCheckedIn ? 'sign-out-alt' : 'sign-in-alt' }}"></i>
+                                    {{ isCheckedIn ? 'Finalizar jornada' : 'Iniciar jornada' }}
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen Rápido -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
+                                <i class="fas fa-calendar-check text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Días trabajados</p>
+                                <p class="text-xl font-semibold">18/22</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
+                                <i class="fas fa-stopwatch text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Promedio diario</p>
+                                <p class="text-xl font-semibold">8h 24m</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Registros -->
+            <div class="mt-8 bg-white rounded-xl border border-gray-100 shadow-sm">
+                <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Historial de Asistencias</h3>
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <input type="text" placeholder="Buscar registro..." class="pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg">
+                            <i class="fas fa-search absolute left-2.5 top-2.5 text-gray-400"></i>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button class="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
+                                <i class="fas fa-sort-amount-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-3 text-left">Fecha</th>
+                                <th class="px-6 py-3 text-left">Horario</th>
+                                <th class="px-6 py-3 text-left">Estado</th>
+                                <th class="px-6 py-3 text-left">Horas</th>
+                                <th class="px-6 py-3 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 font-medium">Hoy</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-green-600">08:58 AM</span>
+                                        <span class="text-gray-300">—</span>
+                                        <span class="text-gray-400">En progreso</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-clock mr-1.5"></i>En curso
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 font-mono">4h 25m</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-blue-600 hover:text-blue-700">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Registros anteriores -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Acciones Rápidas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <!-- Solicitudes Pendientes -->
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
+                    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Acciones Requeridas</h3>
+                        <span class="px-2 py-1 bg-red-100 text-red-600 rounded-full text-sm">2 pendientes</span>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-yellow-50/50 rounded-lg border border-yellow-100">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-yellow-100 rounded-lg text-yellow-600">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Aprobación pendiente</p>
+                                    <p class="text-sm text-gray-500">Permiso médico - Carlos Sánchez</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="p-2 hover:bg-green-100 rounded-lg text-green-600">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="p-2 hover:bg-red-100 rounded-lg text-red-600">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recordatorios -->
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
+                    <div class="px-6 py-5 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold">Próximos Eventos</h3>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                            <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Vacaciones programadas</p>
+                                <p class="text-sm text-gray-500">15 - 20 Abril 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Intuitivo -->
+    <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl m-4">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-semibold">
+                    <i class="fas fa-{{ isCheckedIn ? 'sign-out-alt' : 'sign-in-alt' }} mr-2"></i>
+                    {{ isCheckedIn ? 'Confirmar Salida' : 'Confirmar Entrada' }}
+                </h3>
+                <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form (ngSubmit)="registerAttendance()" class="p-6 space-y-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Hora automática</label>
+                        <div class="flex items-center gap-3">
+                            <input type="time" [(ngModel)]="selectedTime" name="time"
+                                   class="w-full px-4 py-2 border border-gray-200 rounded-lg" 
+                                   [value]="currentTime">
+                            <button type="button" (click)="setCurrentTime()" 
+                                    class="px-3 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100">
+                                Ahora
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Ubicación actual</label>
+                        <div class="flex items-center gap-3 text-gray-600">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ currentLocation || "Obteniendo ubicación..." }}</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Agregar comentario</label>
+                        <textarea [(ngModel)]="registrationNotes" name="notes"
+                                  class="w-full px-4 py-2 border border-gray-200 rounded-lg"
+                                  rows="2"
+                                  placeholder="Ej: Trabajo desde casa"></textarea>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" (click)="closeModal()"
+                            class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2">
+                        <i class="fas fa-{{ isCheckedIn ? 'sign-out-alt' : 'sign-in-alt' }}"></i>
+                        Confirmar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { EncabezadoComponent } from "../../../shared/components/encabezado/encabezado.component";
 import { ToastrService } from 'ngx-toastr';
+import { HomeService } from '../../../core/services/home.service';
 
 @Component({
   selector: 'app-storevet',
@@ -27,20 +28,23 @@ export class StorevetComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastr = inject(ToastrService)
+  private homeService = inject(HomeService);
 
-  productos: Productos[] = [];
-  filteredProductos: Productos[] = [];
+  productos: ProductoDetalles[] = [];
+  filteredProductos: ProductoDetalles[] = [];
   loading = true;
   searchQuery = '';
   isCustomer = false;
   showSnack = false;
   snackMessage = '';
+  cartItemCount = 0;
 
   constructor() {} // Eliminamos la inyección por constructor
 
   ngOnInit(): void {
     this.loadProductos();
     this.isCustomer = this.authService.getUserRole() === 'CUSTOMER';
+    
   }
 
   loadProductos(): void {
@@ -64,43 +68,48 @@ export class StorevetComponent {
   searchProductos(): void {
     this.filteredProductos = this.productos.filter(producto =>
       producto.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      producto.codeReference.toLowerCase().includes(this.searchQuery.toLowerCase())
+      producto.code_reference.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
-  increaseQuantity(producto: Productos): void {
+  increaseQuantity(producto: ProductoDetalles): void {
     if (producto.selectedQuantity < producto.quantity) {
       producto.selectedQuantity++;
     }
   }
 
-  decreaseQuantity(producto: Productos): void {
+  decreaseQuantity(producto: ProductoDetalles): void {
     if (producto.selectedQuantity > 1) {
       producto.selectedQuantity--;
     }
   }
 
-  addToCart(producto: Productos): void {
+  addToCart(producto: ProductoDetalles): void {
    
     const cartItem: PurchaseItemCreateUpdateRequest = {
       productoId: producto.id,
       coverPath: producto.coverPath,
       name: producto.name,
-      code_reference: producto.codeReference,
-      unit_measure_id: producto.unitMeasureId,
+      code_reference: producto.code_reference,
+      unit_measure_id: producto.unit_measure_id,
       quantity: producto.selectedQuantity,
-      discount_rate: producto.discountRate,
-      tax_rate: producto.taxRate,
+      discount_rate: producto.discount_rate,
+      tax_rate: producto.tax_rate,
       standard_code_id: producto.standardCodeId,
       is_excluded:producto.isExcluded,
       tribute_id:producto.tributeId,
       withholding_taxes:producto.withholdingTaxes,
-      price: producto.price
+      price: producto.price,
+      costoDespacho:producto.costoDespacho,
+      selectedQuantity: producto.selectedQuantity,
+      stock: producto.quantity,
     };
 
     this.cartService.addToCart(cartItem);
+    
     this.showSnackBar(`${producto.name} agregado al carrito`);
     console.log('Producto agregado al carrito: ', cartItem);
+   
   }
   clearSearch() {
     this.searchQuery = '';
@@ -115,7 +124,15 @@ export class StorevetComponent {
       this.showSnack = false;
     }, 3000);
   }
-  viewDetails(producto: Productos) {
+  getTotalStock(producto: ProductoDetalles): number {
+    if (!producto.sucursalesStock || producto.sucursalesStock.length === 0) {
+      return 0; // Si no hay sucursales, el stock es 0
+    }
+    
+    return producto.sucursalesStock.reduce((total, sucursal) => total + (sucursal.quantity || 0), 0);
+  }
+  
+  viewDetails(producto: ProductoDetalles) {
     if (!producto || !producto.id) {
       console.error('Producto no definido o sin ID');
       return;

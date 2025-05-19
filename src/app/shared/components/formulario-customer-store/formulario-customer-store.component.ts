@@ -9,6 +9,7 @@ import { Municipios } from '../../models/municipios.model';
 import { CartComponent } from '../../../pages/tienda/cart/cart.component';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '../../../core/services/customerService.service';
+import { UserRegistrationResponse } from '../../models/user-registrationResponse.model';
 
 @Component({
   selector: 'app-formulario-customer-store',

@@ -1,12 +1,18 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PurchaseItemCreateUpdateRequest } from '../../shared/models/purchase-create.update-request';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
   private cartKey = 'cartItems';
+  private cartItemCount = new BehaviorSubject<number>(0); // BehaviorSubject para el contador
+
+  // Observable para suscribirse a los cambios en el contador
+  cartItemCount$ = this.cartItemCount.asObservable();
+
   
 
   constructor(@Inject(PLATFORM_ID) private platformId: any) {}
@@ -16,9 +22,11 @@ export class CartService {
     const items = localStorage.getItem(this.cartKey);
     return items ? JSON.parse(items) : [];
   }
+ 
 
   addToCart(item: PurchaseItemCreateUpdateRequest): void {
     if (!isPlatformBrowser(this.platformId)) return; // Evita errores en SSR
+
     const currentItems = this.getCartItems();
     const existingItemIndex = currentItems.findIndex(
       (i) => i.productoId === item.productoId
@@ -31,8 +39,10 @@ export class CartService {
       currentItems.push(item);
     }
 
-    this.saveCartItems(currentItems);
+    this.saveCartItems(currentItems); // Guarda los ítems en el almacenamiento
+    this.cartItemCount.next(currentItems.length); // Notifica el cambio en el contador
   }
+
 
   removeFromCart(productoId: number): void {
     if (!isPlatformBrowser(this.platformId)) return;

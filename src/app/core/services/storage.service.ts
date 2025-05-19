@@ -15,6 +15,7 @@ export class StorageService {
       localStorage.setItem(this.authKey, JSON.stringify(data));
     }
   }
+  
 
   getAuthData(): AuthResponse | null {
     if (isPlatformBrowser(this.platformId)) {
@@ -29,13 +30,16 @@ export class StorageService {
       localStorage.removeItem(this.authKey);
     }
   }
-  isTokenValid(token: string): boolean {
+  isTokenValid(): boolean {
+    const authData = this.getAuthData();
+    if (!authData || !authData.token) return false;
+
     try {
-      const { exp } = jwtDecode<{ exp: number}>(token);
-      const currenTime = Math.floor(Date.now()/1000)
-      return exp > currenTime;
+      const { exp } = jwtDecode<{ exp: number }>(authData.token);
+      const currentTime = Math.floor(Date.now() / 1000);
+      return exp > currentTime;
     } catch (error) {
-      console.error("Token inváñido: ", error);
+      console.error('Token inválido:', error);
       return false;
     }
   }

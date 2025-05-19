@@ -9,4 +9,5 @@ export interface PurchaseList {
     items: PurchaseItemResponse;
     numeberingRangeId:number;
     number:number;
+    coverPath:string;
 }

@@ -22,6 +22,9 @@ export interface PurchaseItemCreateUpdateRequest {
     is_excluded: number;
     tribute_id: number;
     withholding_taxes: WithholdingTax[];
+    costoDespacho:number;
+    selectedQuantity: number;
+    stock: number;
     
 
 }

@@ -1,4 +1,4 @@
-import { Component, inject} from '@angular/core';
+import { Component, inject, HostListener} from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
@@ -15,6 +15,8 @@ export class SidebarAdminComponent {
   isCollapsed = false;
   customerName: string | null = '';
   initials: string = '';
+  sidebarOpen = false;
+  screenWidth: number = window.innerWidth;
 
 
 
@@ -35,7 +37,18 @@ export class SidebarAdminComponent {
       this.initials = 'U'; // Inicial por defecto
     }
   }
-  
+  toggleSidebar() {
+    if (this.screenWidth < 1024) {
+      this.sidebarOpen = !this.sidebarOpen;
+    }
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.screenWidth = window.innerWidth;
+    if (this.screenWidth >= 1024) {
+      this.sidebarOpen = true; // Asegura que se mantenga visible en pantallas grandes
+    }
+  }
   getInitials(name: string): string {
     if (!name) return 'U'; // Si no hay nombre, se devuelve una inicial por defecto
   

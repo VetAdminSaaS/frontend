@@ -1,0 +1,289 @@
+<div class="max-w-7xl mx-auto bg-white flex flex-col lg:grid lg:grid-cols-2 items-center min-h-screen py-6 sm:px-6 lg:px-4" style="font-family: 'Barlow', sans-serif;">
+  <div class="hidden lg:flex justify-start items-start h-max">
+    <img src="https://i.postimg.cc/7Z82Hvs1/A-adir-un-t-tulo.png" 
+      class="w-full h-max max-w-max object-cover"
+      alt="Veterinaria"/>
+  </div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-md lg:max-w-screen-lg">
+      <h2 class="mt-12 mb-6 text-center text-5xl font-bold text-gray-900">
+      Bienvenido a HachikoVet
+      </h2>
+      <p class="mt-5 text-center text-lg text-gray-600">
+        Completa el siguiente formulario para continuar.
+      </p>
+    <div class="mt-8 sm:mx-auto sm:w-full lg:max-w-7xl">
+      <div class="relative w-full max-w-lg mx-auto">
+        <div class="absolute top-2/4 left-[12%] right-[12%] h-1 bg-gray-200 -translate-y-3 z-0"></div>
+        <div class="absolute top-1/2 left-[12%] h-1 bg-indigo-600 -translate-y- z-10 -translate-y-3 transition-all duration-500"
+          [style.width.%]="(currentStep - 1) * 38"
+        ></div>
+        
+        <div class="flex justify-between items-center relative z-20">
+          <div *ngFor="let step of [1, 2, 3]; let i = index" class="flex-1 text-center relative">
+            <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full transition-all duration-300 cursor-pointer"
+              [ngClass]="{
+                'bg-indigo-600 text-white shadow-lg transform scale-110': currentStep === step,
+                'bg-white border-2 border-gray-300 text-gray-400 hover:bg-gray-100': currentStep !== step
+              }"
+              (click)="setStep(step)"
+            >
+              <span class="font-bold">{{ step }}</span>
+            </div>
+            <p class="mt-2 text-sm transition-all duration-300"
+               [ngClass]="{
+                'font-bold text-indigo-600': currentStep === step,
+                'text-gray-400': currentStep !== step
+              }">
+              Paso {{ step }}
+            </p>
+          </div>
+        </div>
+      </div>
+    
+      <div class=" py-10 px-6  sm:px-10"  [formGroup]="registerForm">
+                 <div *ngIf="currentStep === 1" class="space-y-5">
+                  <div>
+                    <label for="legalOrganizationId" class="block text-lg font-bold text-gray-700">
+                      Tipo de Organización Legal:
+                    </label>
+                    <div class="mt-2 relative rounded-md shadow-sm">
+                      <select
+                        id="legalOrganizationId" name="legalOrganizationId" formControlName="legalOrganizationId"
+                      
+                        required
+                        class="block w-full px-4 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      >
+                        <option value="" disabled selected>Selecciona un Tipo de Organización Legal</option>
+                        <option value="1">Persona Juridica</option>
+                        <option value="2">Persona Natural</option>
+                        
+                      </select>
+                    </div>
+                    <p *ngIf="registerForm.get('legalOrganizationId')?.errors?.['required'] && registerForm.get('legalOrganizationId')?.touched" class="mt-1 text-sm text-red-600">
+                      El Tipo de Organización Legal es obligatorio.
+                    </p>
+                  </div>
+          <div>
+            <label for="identificationDocumentId" class="block text-lg font-bold text-gray-700">
+              Tipo de Documento de Identificación:
+            </label>
+            <div class="mt-2 relative rounded-md shadow-sm">
+              <select
+                id="identificationDocumentId" name="identificationDocumentId" formControlName="identificationDocumentId"
+              
+                required
+                class="block w-full px-4 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="" disabled selected>Selecciona un Tipo de Documento de Identificación</option>
+                <option value="1">Registro civil</option>
+                <option value="2">Tarjeta de identidad</option>
+                <option value="3">Cédula de cuidadanía</option>
+                <option value="4">Tarjeta de extranjería</option>
+                <option value="5">Cédula de extranjería</option>
+                <option value="6">NIT</option>
+                <option value="7">Pasaporte</option>
+                <option value="8">Documento de identificación extranjero</option>
+                <option value="9">PEP</option>
+                <option value="10">NIT otro país</option>
+                <option value="11">NUIP</option>
+              </select>
+            </div>
+            <p *ngIf="registerForm.get('identificationDocumentId')?.errors?.['required'] && registerForm.get('identificationDocumentId')?.touched" class="mt-1 text-sm text-red-600">
+              El ID de documento de identificación es obligatorio.
+            </p>
+          </div>
+          <div *ngIf="registerForm.get('identificationDocumentId')?.value === '6'">
+            <label for="dv" class="block text-gray-700 font-semibold mb-2 text-lg">
+              Dígito de Verificación (DV)
+            </label>
+            <input 
+              formControlName="dv" type="text" id="dv" placeholder="DV" 
+              class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+            >
+            <p *ngIf="registerForm.get('dv')?.errors?.['required'] && registerForm.get('dv')?.touched" class="mt-1 text-sm text-red-600">
+              El dígito de verificación es obligatorio.
+            </p>
+          </div>
+          
+          <div>
+            <label for="identification" class="block text-sm font-bold text-gray-900">
+              Identificación:
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <input
+                id="identification" name="identification" type="text" formControlName="identification" required
+                class="block w-full px-4 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Ej: 76483050"
+              />
+            </div>
+            <p *ngIf="registerForm.get('identification')?.errors?.['required'] && registerForm.get('identification')?.touched" class="mt-1 text-sm text-red-600">
+              La identificación es obligatoria.
+            </p>
+          </div>
+              
+          <div *ngIf="+registerForm.get('legalOrganizationId')?.value === 1">
+
+            <label for="company" class="block text-gray-700 font-semibold mb-2">
+              Compañía
+            </label>
+            <input 
+              formControlName="company"  type="text" id="company"  placeholder="Compañía" 
+              class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+            >
+          </div>
+          
+          
+          <div *ngIf="+registerForm.get('legalOrganizationId')?.value === 1">
+            <label for="tradeName" class="block text-gray-700 font-semibold mb-2">
+              Nombre Comercial
+            </label>
+            <input 
+              formControlName="tradeName" type="text" id="tradeName" placeholder="Nombre Comercial" 
+              class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+            >
+          </div>
+          <div>
+            <div *ngIf="+registerForm.get('legalOrganizationId')?.value ===2">
+              <label for="names" class="block text-gray-700 font-semibold mb-2">
+                Nombres Completos:
+              </label>
+              <input 
+                formControlName="names"  type="text"  id="names" placeholder="Nombres" 
+                class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              >
+            </div>
+            <p *ngIf="registerForm.get('names')?.errors?.['required'] && registerForm.get('names')?.touched" class="mt-1 text-sm text-red-600">
+              Los nombres son obligatorios.
+            </p>
+          </div>
+          
+          
+        </div>
+  
+        <!-- Paso 2: Información de contacto -->
+        <div *ngIf="currentStep === 2" class="space-y-5">
+          <div>
+            <label for="email" class="block text-sm font-semibold text-gray-700">
+              Correo Electrónico:
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <input
+                id="email"name="email" type="email"formControlName="email"required
+                class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Ej: itcontactosoporte1@gmail.com"
+              />
+            </div>
+            <p *ngIf="registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched" class="mt-1 text-sm text-red-600">
+              El correo es obligatorio.
+            </p>
+            <p *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched" class="mt-1 text-sm text-red-600">
+              Ingresa un correo válido.
+            </p>
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-semibold text-gray-700">
+              Contraseña:
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <input
+                id="password" name="password" type="password"formControlName="password"required
+                class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Ej: itcontactosoporte1@gmail.com"
+              />
+            </div>
+            <p *ngIf="registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.touched" class="mt-1 text-sm text-red-600">
+              El correo es obligatorio.
+            </p>
+            <p *ngIf="registerForm.get('password')?.errors?.['password'] && registerForm.get('password')?.touched" class="mt-1 text-sm text-red-600">
+              Ingresa una contraseña validad
+            </p>
+          </div>
+        </div>
+        <div *ngIf="currentStep === 3" class="space-y-5">
+          <div>
+            <label for="tribute_id" class="block text-gray-700 font-semibold mb-2">
+              Tributo
+            </label>
+            <select 
+              formControlName="tributeId" 
+              type="text" 
+              id="tributeId" 
+              placeholder="Tributo" 
+              class="shadow appearance-none border border-gray-300 rounded w-full py-4 px-4 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+            >
+            <option value="" disabled>Seleccione un Tipo de Tributo</option>
+            <option value="18">IVA</option>
+            <option value="21">No aplica*</option>
+            </select>
+            <p *ngIf="registerForm.get('tributeId')?.errors?.['required'] && registerForm.get('tributeId')?.touched" class="mt-1 text-sm text-red-600">
+              El ID de tributo es obligatorio.
+            </p>
+          </div>
+          <div>
+            <label for="address" class="block text-sm font-bold text-gray-700">
+              Dirección:
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <input
+                id="address"name="address"type="text"formControlName="address"required
+                class="block w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Ej: Calle Colombiar"
+              />
+            </div>
+            <p *ngIf="registerForm.get('address')?.errors?.['required'] && registerForm.get('address')?.touched" class="mt-1 text-sm text-red-600">
+              La dirección es obligatoria.
+            </p>
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-semibold text-gray-700">
+              Teléfono:
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <input
+                id="phone"name="phone"type="tel"formControlName="phone"required
+                class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Ej: +1234567890"
+              />
+            </div>
+            <p *ngIf="registerForm.get('phone')?.errors?.['required'] && registerForm.get('phone')?.touched" class="mt-1 text-sm text-red-600">
+              El teléfono es obligatorio.
+            </p>
+          </div>
+        </div>
+       
+
+        <div class="mt-6 flex justify-between">
+          <button
+            *ngIf="currentStep > 1"
+            type="button"
+            (click)="prevStep()"
+            class="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-md"
+          >
+            Anterior
+          </button>
+          <button
+            *ngIf="currentStep < totalSteps"
+            type="button"
+            (click)="nextStep()"
+            [disabled]="!isStepValid(currentStep)"
+            class="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-md"
+          >
+            Siguiente
+          </button>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <button
+              *ngIf="currentStep === totalSteps"
+              type="submit"
+              [disabled]="!isStepValid(currentStep)"
+              class="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-md"
+            >
+              Registrarse
+            </button>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+</div>
+  
+  

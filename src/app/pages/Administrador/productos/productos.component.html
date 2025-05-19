@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100">
+<div class="flex h-screen bg-gray-100"style="font-family: 'Barlow', sans-serif;">
     <!-- Sidebar -->
     <app-sidebar-factus></app-sidebar-factus>
 
@@ -49,8 +49,6 @@
                          
                         />
                       </div>
-                      
-                      <!-- Vista previa de la imagen -->
                       <div *ngIf="imagePreview" class="w-full lg:w-6/12 px-4 mb-4 flex flex-col items-center">
                         <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Vista Previa</label>
                         <div class="relative w-80 h-80">
@@ -72,6 +70,20 @@
                       />
                     </div>
                     <div class="w-full lg:w-6/12 px-4 mb-4">
+                      <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Categoria del Producto<span class="text-red-500">*</span></label>
+                      <select
+                      class="border-0 px-2 py-4 placeholder-gray-600 text-gray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
+                      formControlName="categoryId"
+                      >
+                      <option value="" disabled selected>Seleccione una Categoria</option>
+                      <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                        {{ categoria.nombre }} 
+                      </option>
+                      
+
+                      </select>
+                    </div>
+                    <div class="w-full lg:w-6/12 px-4 mb-4">
                       <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Nombre del Producto <span class="text-red-500">*</span></label>
                       <input 
                       type="text"
@@ -80,6 +92,16 @@
                       required
                       />
                     </div>
+                    <div class="w-full lg:w-6/12 px-4 mb-4">
+                      <label for="descripcion" class="block text-gray-700 text-sm font-medium mb-2">Descripción</label>
+                      <textarea
+                      formControlName="descripcion"
+                        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                        rows="4"
+                        placeholder="Escribe la descripción aquí..."
+                      ></textarea>
+                    </div>
+                    
                     <div class="w-full lg:w-6/12 px-4 mb-4">
                       <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Cantidad <span class="text-red-500">*</span></label>
                       <input 
@@ -95,7 +117,7 @@
                       <input 
                       type="number"
                       class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
-                      formControlName="discountRate"
+                      formControlName="discount_rate"
                       min="1"
                       required
                       />
@@ -115,7 +137,7 @@
                       <input 
                       type="number"
                       class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
-                      formControlName="taxRate"
+                      formControlName="tax_rate"
                       min="1"
                       required
                       />
@@ -124,14 +146,15 @@
                       <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Unidad de Medida <span class="text-red-500">*</span></label>
                       <select
                       class="border-0 px-2 py-4 placeholder-blueGray-600 text-blueGray-600 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
-                      formControlName="unitMeasureId"
-                      [ngClass]="{ 'border-red-500': !form.controls['unitMeasureId'].valid && form.controls['unitMeasureId'].touched }">
+                      formControlName="unit_measure_id"
+                      [ngClass]="{ 'border-red-500': !form.controls['unit_measure_id'].valid && form.controls['unit_measure_id'].touched }">
                       <option value="" disabled selected>Seleccione una Unidad de Medida</option>
                       <option *ngFor="let unidad of unidades" [value]="unidad.id">
                         {{ unidad.name }} 
                       </option>
                     </select>
                     </div>
+                   
                     <div class="w-full lg:w-6/12 px-4 mb-4">
                       <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Código Estandar <span class="text-red-500">*</span></label>
                       <select 
@@ -151,12 +174,17 @@
                     
                     <div class="w-full lg:w-6/12 px-4 mb-4">
                       <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Producto Excluido <span class="text-red-500">*</span></label>
-                      <input 
-                      type="number"
+                      <select 
+                      type="text"
                       class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-gray-100 rounded-2xl text-sm shadow focus:outline-none focus:ring w-full"
                       formControlName="isExcluded"
                       required
-                      />
+                      >
+                      <option value=""disabled select>Selecciona una opcion</option>
+                      <option value="1">Sí</option>
+                      <option value="0">No</option>
+                     
+                      </select>
                     </div>
                     <div class="w-full lg:w-6/12 px-4 mb-4">
                       <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">Tributo del Producto <span class="text-red-500">*</span></label>
@@ -175,8 +203,7 @@
                       <hr class="mt-6 border-b-1 border-blueGray-300 mb-6">
                       <h3 class="text-xl font-semibold text-gray-700 mb-6">Impuestos de Retención</h3>
                     
-                      <!-- Checkbox para habilitar/deshabilitar -->
-                      <!-- Checkbox para habilitar/deshabilitar -->
+          
                       <div class="mb-6">
                         <label class="flex items-center space-x-3 cursor-pointer">
                           <input
@@ -187,12 +214,7 @@
                           <span class="text-sm font-medium text-gray-700">Habilitar Impuestos de Retención</span>
                         </label>
                       </div>
-
-                      <!-- Sección de retenciones -->
                       <div *ngIf="isRetentionEnabled && withholdingTaxesGroup" [formGroup]="withholdingTaxesGroup">
-
-
-                        <!-- Código de Retención -->
                         <div>
                           <label class="block text-sm font-medium text-gray-700 mb-2">Código de Retención</label>
                           <select
@@ -205,8 +227,6 @@
                             </option>
                           </select>
                         </div>
-
-                        <!-- Porcentaje de Retención -->
                         <div>
                           <label class="block text-sm font-medium text-gray-700 mb-2">Porcentaje de Retención</label>
                           <input
@@ -216,21 +236,85 @@
                             placeholder="Ingrese el porcentaje">
                         </div>
                       </div>
-
+                      <div formArrayName="sucursalesStock" class="space-y-4">
+                        <div *ngFor="let stockControl of sucursalesStock.controls; let i = index" [formGroup]="stockControl">
+                            <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                                
+                                <!-- Información de la sucursal -->
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full shadow-md">
+                                        <i class="fas fa-store text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <span class="block font-semibold text-gray-700 text-lg">{{ sucursal[i].nombre }}</span>
+                                        <span class="text-sm text-gray-500">{{ sucursal[i].direccion }}</span>
+                                    </div>
+                                </div>
+                    
+                                <!-- Campo oculto para ID de la sucursal -->
+                                <input type="hidden" formControlName="sucursalId" />
+                    
+                                <!-- Input para el stock con estilos mejorados -->
+                                <div class="flex items-center space-x-2">
+                                    <label class="text-gray-600 font-bold text-2xl">Stock:</label>
+                                    <input
+                                        type="number"
+                                        formControlName="quantity"
+                                        class="w-20 px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                                        placeholder="0"
+                                        min="0"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                  </div>
-          
-
-    
-    
-                  
-                  <!-- Botón de acción -->
+                      <div class="mb-4">
+                        <hr class="mt-6 border-b-1 border-blueGray-300 mb-3">
+                        <label class="block text-xl font-bold text-gray-700 mb-4 text-center">Tipo de Entrega</label>
+                    
+                        <div class="flex justify-center space-x-6">
+                            <!-- Botón para Retiro en Tienda -->
+                            <button 
+                                type="button" 
+                                (click)="toggleEntrega(tiposEntrega.RETIRO_EN_TIENDA)"
+                                [ngClass]="{'bg-red-500 text-white': form.get('tiposEntrega')?.value.includes(tiposEntrega.RETIRO_EN_TIENDA), 
+                                            'bg-gray-200 text-gray-700': !form.get('tiposEntrega')?.value.includes(tiposEntrega.RETIRO_EN_TIENDA)}"
+                                class="flex flex-col items-center px-8 py-6 rounded-lg shadow-md transition-all duration-200 focus:outline-none w-40 h-40">
+                                <i class="fas fa-store text-4xl mb-2"></i>
+                                <span class="text-lg font-medium">Retiro en Tienda</span>
+                            </button>
+                    
+                            <!-- Botón para Despacho a Domicilio -->
+                            <button 
+                                type="button" 
+                                (click)="toggleEntrega(tiposEntrega.DESPACHO_A_DOMICILIO)"
+                                [ngClass]="{'bg-red-500 text-white': form.get('tiposEntrega')?.value.includes(tiposEntrega.DESPACHO_A_DOMICILIO), 
+                                            'bg-gray-200 text-gray-700': !form.get('tiposEntrega')?.value.includes(tiposEntrega.DESPACHO_A_DOMICILIO)}"
+                                class="flex flex-col items-center px-8 py-6 rounded-lg shadow-md transition-all duration-200 focus:outline-none w-40 h-40">
+                                <i class="fas fa-truck text-4xl mb-2"></i>
+                                <span class="text-lg font-medium">Despacho a Domicilio</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    
+                    <div *ngIf="form.get('tiposEntrega')?.value.includes(tiposEntrega.DESPACHO_A_DOMICILIO)" class="mt-6 text-center">
+                        <label class="block text-lg font-semibold text-gray-700 mb-2">Costo de Despacho</label>
+                        <input 
+                            type="number" 
+                            formControlName="costoDespacho"
+                            class="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                            placeholder="Ingrese el costo adicional de despacho">
+                    </div>
+                    </div>
+                    
+                                </div>
                   <div class=" text-center mt-6">
                     <button
                       class="bg-green-500 text-white active:bg-green-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
                       type="submit">
-                      Guardar Producto
+                      @if(productoId) {Actualizar} @else{Crear} Producto
                     </button>
                   </div>
                 
@@ -240,6 +324,5 @@
           </div>
           </div>
         </section>
-        
     </div>
 </div>

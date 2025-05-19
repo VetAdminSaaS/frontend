@@ -1,0 +1,98 @@
+<div class="flex h-screen bg-gray-50">
+    <app-sidebar-admin></app-sidebar-admin>
+    <div class="flex flex-col w-full">
+      <div class="border-b p-10 bg-white">
+      </div>
+    <div class="flex-1 p-6 overflow-auto">
+        <div class="text-4xl font-semibold text-start text-gray-800 m-7 p-3" style="font-family: 'Barlow', sans-serif;">
+            Direcciones     
+        </div>
+        <span class="text-xl font-sans text-start text-gray-600 m-7 p-3" style="font-family: 'Barlow', sans-serif;">
+            Aquí podrás agregar tus direcciones de despacho y/o facturación
+        </span>
+        <div class="w-11/12 m-7 p-3 border rounded-2xl bg-white shadow-sm">
+            <div class="flex justify-between items-center">
+                <div class="text-3xl font-semibold text-start text-gray-800 p-3" style="font-family: 'Barlow', sans-serif;">
+                    Direcciones de despacho
+                </div>
+            </div>
+            <span class="text-start text-gray-500  p-3 font-barlow text-lg mb-4" style="font-family: 'Barlow', sans-serif;">
+                Ingresa la dirección en la que quieres recibir tu(s) compra(s).
+            </span>
+
+            <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-3 mt-4">
+                <div *ngFor="let direccion of direcciones" 
+                    class="bg-white border rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow flex flex-col">
+                    
+                    <!-- Sección de detalles -->
+                    <div class="mb-4">
+                        <h3 class="text-2xl font-semibold text-gray-600 mb-2" style="font-family: 'Barlow', sans-serif;">
+                            {{ direccion.nombre }}
+                        </h3>
+                        <h4 class="text-xl font-normal text-gray-500 mb-1" style="font-family: 'Barlow', sans-serif;">
+                            {{ direccion.direccion }}
+                        </h4>
+                        <h4 class="text-2xl font-sans text-gray-600" style="font-family: 'Barlow', sans-serif;">
+                            {{ direccion.ciudad }}
+                        </h4>
+                    </div>
+            
+                    <!-- Sección de acciones -->
+                    <div class="flex justify-end gap-3 border-t pt-3">
+                        <button class="text-gray-500 hover:text-blue-700 transition" (click)="abrirFormulario(direccion)">
+                            <i class="fas fa-edit text-2xl"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-red-700 transition" (click)="eliminarDireccion(direccion.id)">
+                            <i class="fas fa-trash-alt text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+            
+                <!-- Botón de agregar dirección -->
+                <button class="bg-gray-50 border-2 text-center border-black text-black px-3 py-2 text-xl rounded-lg 
+                    hover:bg-gray-200 transition flex items-center justify-center gap-2" 
+                    style="font-family: 'Barlow', sans-serif;" 
+                    (click)="abrirFormulario()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#000">
+                        <path d="M469-469.5H252v-22h217v-217h22v217h217v22H491v217h-22v-217Z"/>
+                    </svg>
+                    <span>Agregar Dirección</span>
+                </button>
+            </div>
+            
+
+            <!-- Formulario embebido -->
+            <div *ngIf="mostrandoFormulario" class="bg-gray-50 p-6 rounded-lg border mb-6" style="font-family: 'Barlow', sans-serif;">
+                <div class="text-gray- text-2xl mb-1"> @if(direccionId) {Actualizar mi dirección Mi "{{direccion.nombre}}"}  @else {Agregar Nueva Dirección}  </div>
+                <div class="text-gray-600 mb-8">*Datos obligatorios</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input 
+                          [(ngModel)]="direccion.nombre" 
+                          class="border p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ingrese su nombre"
+                        />
+                    <input [(ngModel)]="direccion.direccion" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Dirección">
+                    <input [(ngModel)]="direccion.referencia" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Referencia">
+                    <input [(ngModel)]="direccion.piso" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" type="number" min="1" placeholder="Piso">
+                    <input [(ngModel)]="direccion.telefono" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Teléfono">
+                    <input [(ngModel)]="direccion.ciudad" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Ciudad">
+                    <input [(ngModel)]="direccion.provincia" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Provincia">
+                    <input [(ngModel)]="direccion.distrito" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Distrito">
+                    <input [(ngModel)]="direccion.codigoPostal" class="border p-3 rounded-lg" style="font-family: 'Barlow', sans-serif;" placeholder="Código Postal">
+                </div>
+                <div class="flex justify-end gap-3 mt-4">
+                    <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition" (click)="cerrarFormulario()">
+                        Cancelar
+                    </button>
+                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition" (click)="guardarDireccion()">
+                       @if(direccionId) {Actualizar} @else {Guardar} 
+                    </button>
+                </div>
+            </div>
+
+         
+          
+        </div>
+    </div>
+</div>
+</div>

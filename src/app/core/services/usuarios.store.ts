@@ -22,6 +22,10 @@ export class usuariosStoreService{
      getTotalUsuarios():Observable<any>{
       return this.http.get<any>(`${this.baseURL}/total`)
      }
+     updateUsuario(userId: number, usuarioData: UserProfile): Observable<UserProfile> {
+      return this.http.put<UserProfile>(`${this.baseURL}/${userId}`, usuarioData);
+    }
+   
 
 
 }
