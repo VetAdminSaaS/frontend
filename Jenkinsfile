@@ -23,21 +23,17 @@ pipeline {
             }
         }
 
-        stage('Login to AWS ECR') {
+        stage('Login and Push to ECR') {
             steps {
-                script {
-                    sh '''
-                    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
-                    '''
-                }
-            }
-        }
-
-        stage('Push Image to ECR') {
-            steps {
-                script {
-                    docker.withRegistry("https://${ECR_REGISTRY}", 'aws-credentials-id') {
-                        docker.image("${ECR_REPO}:${IMAGE_TAG}").push()
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials-id', usernameVariable: 'AWS_USER', passwordVariable: 'AWS_PASS')]) {
+                    script {
+                        sh """
+                            echo \$AWS_PASS | docker login --username \$AWS_USER --password-stdin ${ECR_REGISTRY}
+                        """
+                        sh """
+                            docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
+                            docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
+                        """
                     }
                 }
             }
@@ -45,11 +41,16 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-                script {
-                   
-                    sh '''
-                    kubectl set image deployment/frontend-deployment frontend-container=${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} -n default
-                    '''
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials-id', usernameVariable: 'AWS_USER', passwordVariable: 'AWS_PASS')]) {
+                    script {
+                      
+                        sh """
+                            aws eks update-kubeconfig --region ${AWS_REGION} --name tu-nombre-del-cluster
+                        """
+                        sh """
+                            kubectl set image deployment/frontend-deployment frontend-container=${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} -n default
+                        """
+                    }
                 }
             }
         }
